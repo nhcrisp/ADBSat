@@ -1,0 +1,33 @@
+# ADBSat (Aerodynamic Database for Satellites)
+All notable changes to this project will be documented in this file.
+
+Always keep a [Unreleased] section at the top for tracking changes
+
+## [3.0] - 2020-07-22
+### Changed
+- Input to GSI models changed to structure (identical input format)
+- Input parameters saved with output files
+- Removed all use of eval
+- Changes to naming conventions for output files 
+### Added
+- Automated stl2obj conversion using meshlabserver included
+### Removed
+### Fixed
+
+## [2.1] - 2018-11-01
+### Changed
+- Substructures created for .aero and .solar in merged database output
+- Logic changed for processing GSI model inputs in ADBSatFcn.m
+### Added
+### Removed
+### Fixed
+
+## [2.0] - 2018-10-15
+### Added
+- Different surface/material characteristics in GSIM calculation
+- Solar radiation pressure coefficients
+### Changed
+- Absolute path references are now dyanmically allocated based on /install/ADBsat_dynpath function
+
+## [1.2] - 2013-03-14
+- David Mostaza Prieto final version.

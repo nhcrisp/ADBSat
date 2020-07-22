@@ -1,0 +1,12 @@
+<!DOCTYPE FilterScript>
+<FilterScript>
+ <filter name="Transform: Translate, Center, set Origin">
+  <Param value="1" enum_val1="Center on BBox" type="RichEnum" description="Transformation:" name="traslMethod" enum_val0="XYZ translation" enum_cardinality="3" enum_val2="Set new Origin" tooltip="[XYZ translation] adds X,Y and Z offset to Layer transformation, [Center on BBox] moves Layer Origin to the Bounding Box center, [Set new Origin] moves Layer Origin to a specific point"/>
+  <Param max="14.244" value="0" type="RichDynamicFloat" description="X Axis" min="-14.244" name="axisX" tooltip="when using [XYZ translation], amount of translation along the X axis (in model units)"/>
+  <Param max="14.244" value="0" type="RichDynamicFloat" description="Y Axis" min="-14.244" name="axisY" tooltip="when using [XYZ translation], amount of translation along the Y axis (in model units)"/>
+  <Param max="14.244" value="0" type="RichDynamicFloat" description="Z Axis" min="-14.244" name="axisZ" tooltip="when using [XYZ translation], amount of translation along the Z axis (in model units)"/>
+  <Param type="RichPoint3f" description="New Origin:" y="0" z="0" name="newOrigin" x="0" tooltip="when using [Set new Origin], this is the location of the new Origin."/>
+  <Param value="true" type="RichBool" description="Freeze Matrix" name="Freeze" tooltip="The transformation is explicitly applied, and the vertex coordinates are actually changed"/>
+  <Param value="false" type="RichBool" description="Apply to all visible Layers" name="allLayers" tooltip="If selected the filter will be applied to all visible mesh layers"/>
+ </filter>
+</FilterScript>
