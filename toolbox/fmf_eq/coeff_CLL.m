@@ -87,7 +87,7 @@ sum_cl = 0;
 
 for i = 1: length(rho)
     
-    m_j(i) = 1000*rho(i)*1;
+    m_j(i) = (M_j(i)/NA*rho(i))/M_j(i);
     n_j(i) = m_j(i) / M_j(i);  % Number of moles for each species in the mixture {He, O, N2, O2, H, N} [mol]
     xi_j(i) = n_j(i) / n_mix; % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
     m_avg = m_avg + xi_j(i) * M_j(i); % Average mass of the mixture
@@ -108,8 +108,8 @@ end
 
 function [beta, gamma, delta, zeta] = Fitted_Parameters(i, alphaN)
 % Fitted parameters for CLL model From A.C. Walker, P.M. Mehta, J. Koller,
-% Drag Coefficient Model Using the Cercignani–Lampis–Lord Gas–Surface
-% Interaction Model, J. Spacecr. Rockets. 51 (2014) 1544–1563.
+% Drag Coefficient Model Using the Cercignaniâ€“Lampisâ€“Lord Gasâ€“Surface
+% Interaction Model, J. Spacecr. Rockets. 51 (2014) 1544â€“1563.
 % doi:10.2514/1.A32677
 
 if i == 1
