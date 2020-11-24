@@ -87,15 +87,15 @@ sum_cl = 0;
 
 for i = 1: length(rho)
     
-    m_j(i) = (M_j(i)/NA*rho(i))/M_j(i);
+    m_j(i) = (M_j(i)/NA*rho(i))/M_j(i); % [g]
     n_j(i) = m_j(i) / M_j(i);  % Number of moles for each species in the mixture {He, O, N2, O2, H, N} [mol]
     xi_j(i) = n_j(i) / n_mix; % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
-    m_avg = m_avg + xi_j(i) * M_j(i); % Average mass of the mixture
+    m_avg = m_avg + xi_j(i) * m_j(i); % Average mass of the mixture
     
-    sum_ctau = sum_ctau + xi_j(i) * M_j(i).* ctau_j(i,:);
-    sum_cp = sum_cp + xi_j(i) * M_j(i).* cp_j(i,:);
-    sum_cd = sum_cd + xi_j(i) * M_j(i).* cd_j(i,:);
-    sum_cl = sum_cl + xi_j(i) * M_j(i).*cl_j(i,:);
+    sum_ctau = sum_ctau + xi_j(i) * m_j(i).* ctau_j(i,:);
+    sum_cp = sum_cp + xi_j(i) * m_j(i).* cp_j(i,:);
+    sum_cd = sum_cd + xi_j(i) * m_j(i).* cd_j(i,:);
+    sum_cl = sum_cl + xi_j(i) * m_j(i).*cl_j(i,:);
     
 end
 
