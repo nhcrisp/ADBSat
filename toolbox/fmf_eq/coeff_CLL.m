@@ -6,7 +6,7 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 %       param_eq.alphaN : normal thermal energy accommodation coefficient;
 %       param_eq.sigmaT : tangential momentum accommodation coefficient;
 %       param_eq.Vw     : velocity of the reflected diffuse molecules [Vw = sqrt(pi.*R.*Tw/2)];
-%       param_eq.V      : thermal velocity
+%       param_eq.V      : free stream velocity
 %       param_eq.rho    : structure containing density value [provided by atmosnrlmsise00 model for the termosphere]
 %       delta           : angle between surface normal and the flow
 %
