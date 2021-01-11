@@ -8,7 +8,7 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 %       param_eq.Vw     : velocity of the reflected diffuse molecules [Vw = sqrt(pi.*R.*Tw/2)];
 %       param_eq.V      : free stream velocity
 %       param_eq.rho    : structure containing density value [provided by atmosnrlmsise00 model for the termosphere]
-%                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [g/m3] 
+%                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [1/m3] 
 %                         param_eq.rho(6) in [kg/m3] 
 %       delta           : angle between surface normal and the flow
 %
@@ -89,7 +89,7 @@ sum_cl = 0;
 
 for i = 1: length(rho)
     
-    m_j(i) = (M_j(i)/NA*rho(i))/M_j(i); % [g]
+    m_j(i) = (M_j(i)/NA*rho(i)); % [g]
     n_j(i) = m_j(i) / M_j(i);  % Number of moles for each species in the mixture {He, O, N2, O2, H, N} [mol]
     xi_j(i) = n_j(i) / n_mix; % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
     m_avg = m_avg + xi_j(i) * m_j(i); % Average mass of the mixture
