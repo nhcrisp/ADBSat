@@ -8,6 +8,8 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 %       param_eq.Vw     : velocity of the reflected diffuse molecules [Vw = sqrt(pi.*R.*Tw/2)];
 %       param_eq.V      : free stream velocity
 %       param_eq.rho    : structure containing density value [provided by atmosnrlmsise00 model for the termosphere]
+%                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [g/m3] 
+%                         param_eq.rho(6) in [kg/m3] 
 %       delta           : angle between surface normal and the flow
 %
 % Outputs:
