@@ -44,7 +44,6 @@ cp_j = zeros(length(rho),length(delta));   % normal pressure coefficient
 cd_j = zeros(length(rho),length(delta));   % drag coefficient
 cl_j = zeros(length(rho),length(delta));   % lift coefficient
 m_j = zeros(length(rho),1);
-n_j = zeros(length(rho),1);
 xi_j = zeros(length(rho),1);
 
 for i = 1: length(rho) % compute fitted parameters for the species considered [ref: Walker et al.]
@@ -75,11 +74,6 @@ end
 % mixture [ref: Walker et al]
 
 M_j = [4.002602, 15.999, 14.0067*2, 15.999*2, 1.00784, 14.0067]; % Molecular mass of {He, O, N2, O2, H, N} [g/mol]
-mw_mix = sum(M_j); % Molar weigth of the mixture [g/mol]
-
-% Not precise: rhoTot comprises Argon and anomalous Oxygen at the moment!
-mass_mix = 1000*rhoTot*1; % Mass of the gas mixture [g]
-n_mix = mass_mix/mw_mix; % Number of moles for the gas mixture [mol]
 
 m_avg = 0;
 sum_ctau = 0;
@@ -90,8 +84,7 @@ sum_cl = 0;
 for i = 1: length(rho)
     
     m_j(i) = (M_j(i)/NA*rho(i)); % [g]
-    n_j(i) = m_j(i) / M_j(i);  % Number of moles for each species in the mixture {He, O, N2, O2, H, N} [mol]
-    xi_j(i) = n_j(i) / n_mix; % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
+    xi_j(i) = rho(i) / (sum(rho)); % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
     m_avg = m_avg + xi_j(i) * m_j(i); % Average mass of the mixture
     
     sum_ctau = sum_ctau + xi_j(i) * m_j(i).* ctau_j(i,:);
@@ -114,40 +107,34 @@ function [beta, gamma, delta, zeta] = Fitted_Parameters(i, alphaN)
 % Interaction Model, J. Spacecr. Rockets. 51 (2014) 1544–1563.
 % doi:10.2514/1.A32677
 
-if i == 1
-    % molecular species: He
+if i == 1             % molecular species: He
     if alphaN >= 0.95 && alphaN <= 1
         beta = 6.2; gamma = 0.38; delta = 3.3; zeta = 0.74;
-    elseif alphaN >= 0.90 && alphaN <= 0.95
+    elseif alphaN >= 0.90 && alphaN <= 0.95 
         beta = 3.8; gamma = 0.52; delta = 3.4; zeta = 1.12;
     elseif  alphaN >= 0.50  && alphaN <= 0.90
         beta = 3.45; gamma = 0.52; delta = 2.4; zeta = 0.93;
     elseif  alphaN >= 0  && alphaN <= 0.50
         beta = 0.08; gamma = 0.52; delta = 4.2; zeta = 1.1;
     end
-elseif i == 2
-    % molecular species: O
-    beta = 4.4; gamma = 0.32; delta = 0.48; zeta = 11;
-elseif i == 3
-    % molecular species: N2
-    beta = 5.5; gamma = 0.18; delta = 0.5; zeta = 51;
-elseif i == 4
-    % molecular species: O2
-    beta = 5.45; gamma = 0.18; delta = 0.5; zeta = 49;
-elseif i == 5
-    % molecular species: H
+elseif i == 2          % molecular species: O
+    beta = 5.85; gamma = 0.2; delta = 0.48; zeta = 31;
+elseif i == 3          % molecular species: N2
+    beta = 6.6; gamma = 0.22; delta = 0.48; zeta = 35;
+elseif i == 4          % molecular species: O2
+    beta = 6.3; gamma = 0.26; delta = 0.42; zeta = 20.5;
+elseif i == 5          % molecular species: H 
     if alphaN >= 0.95 && alphaN <= 1
         beta = 3.9; gamma = 0.195; delta = 1.4; zeta = 0.3;
-    elseif alphaN >= 0.90 && alphaN <= 0.95
+    elseif alphaN >= 0.90 && alphaN <= 0.95 
         beta = 3.5; gamma = 0.42; delta = 2; zeta = 0.72;
     elseif  alphaN >= 0.50  && alphaN <= 0.90
         beta = 3.45; gamma = 0.52; delta = 2.4; zeta = 0.93;
     elseif  alphaN >= 0  && alphaN <= 0.50
         beta = 0.095; gamma = 0.465; delta = 2.9; zeta = 0.92;
     end
-elseif i == 6
-    % molecular species: N
-    beta = 4.75; gamma = 0.24; delta = 0.5; zeta = 20;
+elseif i == 6           % molecular species: N
+    beta = 4.9; gamma = 0.32; delta = 0.42; zeta = 8;
 end
 
 end
