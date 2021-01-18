@@ -32,6 +32,8 @@ V = param_eq.V;
 rho = param_eq.rho;
 
 rhoTot = rho(6);
+rhoAr = rho(5);
+rhoOa = rho(9);
 
 rho(5) = 0; % density of Argon (not included in the model)
 rho(6) = 0; % total density (saved into a separate variable [rhoTot])
@@ -84,7 +86,10 @@ sum_cl = 0;
 for i = 1: length(rho)
     
     m_j(i) = (M_j(i)/NA*rho(i)); % [g]
-    xi_j(i) = rho(i) / (sum(rho)); % Mole Fraction of each species in the mixture {He, O, N2, O2, H, N}
+    % Mole/number fraction of each species in the mixture {He, O, N2, O2, H, N}
+    % In the computation the presence of molecular species ignored by the
+    % analytical implementation is considered
+    xi_j(i) = rho(i) / (sum(rho)+rhoAr+rhoOa); 
     m_avg = m_avg + xi_j(i) * m_j(i); % Average mass of the mixture
     
     sum_ctau = sum_ctau + xi_j(i) * m_j(i).* ctau_j(i,:);
