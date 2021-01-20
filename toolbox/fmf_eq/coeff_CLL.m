@@ -36,7 +36,7 @@ rhoAr = rho(5);
 rhoOa = rho(9);
 
 rho(5) = 0; % density of Argon (not included in the model)
-rho(6) = 0; % total density (saved into a separate variable [rhoTot])
+rho(6) = 0; % total density 
 rho(9) = 0; % density of anomalous Oxygen (not included in the model)
 rho(rho == 0) = [];
 
@@ -54,8 +54,8 @@ for i = 1: length(rho) % compute fitted parameters for the species considered [r
     [beta_fp, gamma_fp, delta_fp, zeta_fp] = Fitted_Parameters(i, alphaN);
     % Define gamma1 and gamma2 function
     x_var = s.*cos(delta);
-    gamma1 = 1/sqrt(pi).*[x_var.*exp(-x_var.^2) + sqrt(pi)/2*(1+2*x_var.^2).*(1+erf(x_var))];
-    gamma2 = 1/sqrt(pi).*[exp(-x_var.^2)+sqrt(pi).*x_var.*(1+erf(x_var))];
+    gamma1 = 1/sqrt(pi).*(x_var.*exp(-x_var.^2) + sqrt(pi)/2*(1+2*x_var.^2).*(1+erf(x_var)));
+    gamma2 = 1/sqrt(pi).*(exp(-x_var.^2)+sqrt(pi).*x_var.*(1+erf(x_var)));
     % compute shear stress coefficient
     ctau_j(i,:,:) = (sigmaT.*sin(delta))./s.*gamma2;
     % compute normal stress coefficient
