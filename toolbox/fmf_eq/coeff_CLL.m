@@ -5,9 +5,8 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 % Inputs:
 %       param_eq.alphaN : normal thermal energy accommodation coefficient;
 %       param_eq.sigmaT : tangential momentum accommodation coefficient;
-%       param_eq.Vw     : velocity of the reflected diffuse molecules [Vw =
-%                         sqrt(pi.*R.*Tw/(2M)) with M = mean molecular weight, R = gas constant in J/K/mol]
-%       param_eq.V      : free stream velocity
+%       param_eq.Tw     : wall temperature [K];
+%       param_eq.Tinf   : free stream temperature [K];
 %       param_eq.rho    : structure containing density value [provided by atmosnrlmsise00 model for the termosphere]
 %                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [1/m3] 
 %                         param_eq.rho(6) in [kg/m3] 
@@ -28,8 +27,8 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 alphaN = param_eq.alphaN;
 sigmaT = param_eq.sigmaT;
 s = param_eq.s;
-Vw = param_eq.Vw;
-V = param_eq.V;
+Tw = param_eq.Tw;
+Tinf = param_eq.Tinf;
 rho = param_eq.rho;
 
 rhoTot = rho(6);
@@ -50,25 +49,29 @@ m_j = zeros(length(rho),1);
 xi_j = zeros(length(rho),1);
 
 for i = 1: length(rho) % compute fitted parameters for the species considered [ref: Walker et al.]
+
+    % compute fitted parameters for the species considered [ref: Walker et al.]
     [beta_fp, gamma_fp, delta_fp, zeta_fp] = Fitted_Parameters(i, alphaN);
+    % Define gamma1 and gamma2 function
+    x_var = s.*cos(delta);
+    gamma1 = 1/sqrt(pi).*[x_var.*exp(-x_var.^2) + sqrt(pi)/2*(1+2*x_var.^2).*(1+erf(x_var))];
+    gamma2 = 1/sqrt(pi).*[exp(-x_var.^2)+sqrt(pi).*x_var.*(1+erf(x_var))];
     % compute shear stress coefficient
-    ctau_j(i,:) = sigmaT./(sqrt(pi)*s).*sin(2*delta).*cos(delta).*exp(-s^2*cos(delta).^2)+ ...
-        2*sigmaT./(sqrt(pi)*s).*sin(delta).^3.*exp(-s^2*cos(delta).^2) + ...
-        sigmaT.*sin(2*delta).*erf(s*cos(delta));
+    ctau_j(i,:,:) = (sigmaT.*sin(delta))./s.*gamma2;
     % compute normal stress coefficient
-    cp_j(i,:) = 4*cos(delta)./(sqrt(pi)*s).*exp(-s^2.*cos(delta).^2) - ...
-        2*cos(delta)./(sqrt(pi)*s)*(1-sqrt(1-alphaN)).*exp(-s^2*cos(delta).^2) + ...
-        (((1+sqrt(1-alphaN))/s^2) + 4.*cos(delta).^2 - 2*(1-sqrt(1-alphaN)).*cos(delta).^2).*erf(s*cos(delta)) + ...
-        exp(-beta_fp*(1-alphaN)^gamma_fp)*2.*cos(delta).*zeta_fp/s*(2*Vw*s/(sqrt(pi)*V))^(2*delta_fp)*Vw/V;
-    
-    %     ind = find(delta>pi/2);
-    %     ctau(ind) = 0;
-    %     cp(ind) = 0;
-    
+    cp_j(i,:,:) = (1/s^2).*((1+sqrt(1-alphaN))*.gamma1 +...
+        0.5*(exp(-beta_fp.*(1-alphaN).^gamma_fp).*(Tw/Tinf).^delta_fp.*(zeta_fp./s)).*...
+        sqrt(Tw/Tinf)*sqrt(pi).*gamma2);
+
+%     ind = find(delta>pi/2);
+%     ctau(ind) = 0;
+%     cp(ind) = 0;
+
     % compute drag coefficient:
     cd_j(i,:) = cp_j(i,:).*cos(delta) + ctau_j(i,:).*sin(delta);
     % compute lift coefficient:
     cl_j(i,:) = cp_j(i,:).*sin(delta) - ctau_j(i,:).*cos(delta);
+    
 end
 
 % Computing total Cd and Cl
