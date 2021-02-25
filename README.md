@@ -29,9 +29,60 @@ ADBSat may therefore lose accuracy when:
 
 ## Usage
 - Requires Wavefront .obj mesh files as input geometry (generated using Blender or from .stl using meshlab)
-- Ensure that meshlabserver is available on the system PATH
+- Ensure that meshlabserver is available on the system PATH (if automated conversion from .stl to .obj files is required)
 - ADBSatImport generates the geometric database file (output in models directory)
 - ADBSatFcn generates the output force and moment coefficient database (output in results directory)
+
+## Directory Structure
+```bash
+. 
+├── examples                                    #Directory containing the example cube case.
+|     ├── ADBSatMain.m                          #Sample input file. Produces aerodynamic analysis of a cube at an AOA=0deg and AOS=10deg.
+|     ├── *axes_definition2.fig                  #Pictorial representation of the geometric, body, flight and wind axes.
+|     ├── MainImport.m                          #Import of the example cube object from a .obj to a .mat file.
+|     ├── *PlotSatAxes.m                         #????
+|     └── run_cube.m                            #Runs the whole cube example, from import to final aerodynamic database output.
+├── inou                                        #Directory containing the model inputs from the program.
+|     ├── obj_files                             #Directory containing .obj satellite models (CAD inputs to ADBSat).
+|     |     └── cube.obj                        #CAD model of a cube used in the sample case.
+|     ├── stl_files                             #Directory containing .stl satellite models (alternative CAD inputs to ADBSat).
+|           └── cube.STL                        #CAD model of a cube used in the sample case (alternative).
+├── install                                     #Directory containing the installation files
+|     ├── ADBSat_dynpath.m                      #Creates the path to the ADBSat base folder
+|     └── ADBSat_install.m                      #Installs ADBSat and adds necessary paths to toolbox.
+├── toolbox                                     #Directory containing the program functions.
+|     ├── calc                                  #Directory containing general calculation functions.
+|     |     ├── astrophysicalConstants.m        #Creates useful constants.
+|     |     ├── calc_coeff.m                    #Calculates local and global aerodynamic and solar coefficients.
+|     |     ├── environment.m                   #Interfaces with the MATLAB version of the NRLMSISE-00 atmospheric model.
+|     |     ├── insidetri.m                     #Checks if a point is inside a triangle.
+|     |     └── shadowAnaly.m                   #Checks if some mesh panels are shadowed by others.
+|     ├── fmf_eq                                #Directory containing GSI model equations to calculate the drag coefficient.
+|     |     ├── coeff_CLL.m                     #Cercignani-Lampis-Lord model.
+|     |     ├── coeff_cook.m                    #Cook model.
+|     |     ├── coeff_maxwell.m                 #Maxwell model.
+|     |     ├── coeff_newton.m                  #Newton hard-sphere model.
+|     |     ├── coeff_schaaf.m                  #Schaaf and Chambre model.
+|     |     ├── coeff_sentman.m                 #Sentman model.
+|     |     ├── coeff_storchHyp.m               #Storch hyperthermal model.
+|     |     └── mainCoeff.m                     #Passes the input parameters to the selected GSI model.
+|     ├── import                                #Directory containing functions used in the model import.
+|     |     ├── importobjtri.m                  #Imports a triangular mesh from a .obj file.
+|     |     ├── *meshlab_reset_origin.mlx        #????
+|     |     ├── obj_fileTri2patch.m             #Reads a .obj file and outputs lists of vertices, faces, coordinates, and material identifiers. 
+|     |     ├── stl2obj.m                       #Converts a .stl file to a .uobj file using meshlabserver.
+|     |     └── surfaceNormals.m                #Calculates surface normals, areas, and barycentres of all elements of a triangular mesh.
+|     ├── postpro                               #Directory containing post-processing functions.
+|     |     ├── mergeAEDB.m                     #Merges coefficients calculated for different AOA/AOS into a single structure.
+|     |     ├── plotNormals.m                   #Plots the result of the .obj import
+|     |     └── plot_surfq.m                    #Plots the result of the ADBSat run, colour-coded to a chosen parameter
+|     └── srp_eq                                #Directory containing solar radiation pressure model equations to calculate solar coefficients.
+|           ├── coeff_solar.m                   #Luthcke model.
+├── ADBSatFcn.m                                 #Function which runs ADBSat.
+├── ADBSatImport.m                              #Function which imports a .obj CAD file to a .mat file.
+├── CHANGELOG.txt                               #Log of changes to the program.
+└── README.md                                   #README file.
+```
 
 ## References
 
