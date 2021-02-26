@@ -38,9 +38,7 @@ ADBSat may therefore lose accuracy when:
 . 
 ├── examples                                    #Directory containing the example cube case.
 |     ├── ADBSatMain.m                          #Sample input file. Produces aerodynamic analysis of a cube at an AOA=0deg and AOS=10deg.
-|     ├── *axes_definition2.fig                  #Pictorial representation of the geometric, body, flight and wind axes.
 |     ├── MainImport.m                          #Import of the example cube object from a .obj to a .mat file.
-|     ├── *PlotSatAxes.m                         #????
 |     └── run_cube.m                            #Runs the whole cube example, from import to final aerodynamic database output.
 ├── inou                                        #Directory containing the model inputs from the program.
 |     ├── obj_files                             #Directory containing .obj satellite models (CAD inputs to ADBSat).
@@ -68,7 +66,7 @@ ADBSat may therefore lose accuracy when:
 |     |     └── mainCoeff.m                     #Passes the input parameters to the selected GSI model.
 |     ├── import                                #Directory containing functions used in the model import.
 |     |     ├── importobjtri.m                  #Imports a triangular mesh from a .obj file.
-|     |     ├── *meshlab_reset_origin.mlx        #????
+|     |     ├── meshlab_reset_origin.mlx        #Resets bounding box when converting CAD file from .stl to .obj.
 |     |     ├── obj_fileTri2patch.m             #Reads a .obj file and outputs lists of vertices, faces, coordinates, and material identifiers. 
 |     |     ├── stl2obj.m                       #Converts a .stl file to a .uobj file using meshlabserver.
 |     |     └── surfaceNormals.m                #Calculates surface normals, areas, and barycentres of all elements of a triangular mesh.
