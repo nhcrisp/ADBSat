@@ -75,7 +75,7 @@ ADBSat may therefore lose accuracy when:
 |     |     ├── plotNormals.m                   #Plots the result of the .obj import
 |     |     └── plot_surfq.m                    #Plots the result of the ADBSat run, colour-coded to a chosen parameter
 |     └── srp_eq                                #Directory containing solar radiation pressure model equations to calculate solar coefficients.
-|           ├── coeff_solar.m                   #Luthcke model.
+|           └── coeff_solar.m                   #Luthcke model.
 ├── ADBSatFcn.m                                 #Function which runs ADBSat.
 ├── ADBSatImport.m                              #Function which imports a .obj CAD file to a .mat file.
 ├── CHANGELOG.txt                               #Log of changes to the program.
