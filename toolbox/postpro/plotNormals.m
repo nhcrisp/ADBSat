@@ -1,5 +1,5 @@
 function [] = plotNormals( fiName )
-%PLOTNORMALS Plots the mesh and normal vectors
+% Plots the mesh and normal vectors
 %
 % Inputs:   
 %    fiName : Path to the .mat file containing the meshdata structure
