@@ -1,5 +1,5 @@
 function [cp, ctau, cd, cl] = coeff_cook(param_eq, delta)
-%COEFF_COOK calculates "Hyperthermal" FMF coefficients for a flat plate using Cook's formula
+% Calculates "Hyperthermal" FMF coefficients for a flat plate using Cook's formula
 % Koppenwallner. "Comment on special section: New perspectives on the satellite 
 % drag environments of Earth, Mars, and Venus". Journal of Spacecraft and Rockets, 2008.
 % - Hyperthermal
