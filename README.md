@@ -43,7 +43,7 @@ ADBSat may therefore lose accuracy when:
 ├── inou                                        #Directory containing the model inputs from the program.
 |     ├── obj_files                             #Directory containing .obj satellite models (CAD inputs to ADBSat).
 |     |     └── cube.obj                        #CAD model of a cube used in the sample case.
-|     ├── stl_files                             #Directory containing .stl satellite models (alternative CAD inputs to ADBSat).
+|     └── stl_files                             #Directory containing .stl satellite models (alternative CAD inputs to ADBSat).
 |           └── cube.STL                        #CAD model of a cube used in the sample case (alternative).
 ├── install                                     #Directory containing the installation files
 |     ├── ADBSat_dynpath.m                      #Creates the path to the ADBSat base folder
