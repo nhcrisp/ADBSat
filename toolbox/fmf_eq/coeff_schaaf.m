@@ -1,5 +1,5 @@
 function [cp, ctau, cd, cl] = coeff_schaaf(param_eq, delta)
-%COEFF_SCHAAF calculates aerodynamic coefficients for a flat plate using Schaaf and Chambre formula
+% Calculates aerodynamic coefficients for a flat plate using Schaaf and Chambre formula
 %
 % Inputs:
 %       param_eq.sigmaN : Normal accomodation coeffcient [-]
