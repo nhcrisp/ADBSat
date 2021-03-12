@@ -1,5 +1,5 @@
 function [cp, ctau, cd, cl] = coeff_newton(param_eq, delta)
-%COEFF_NEWTON calculates aerodynamic coefficients for a flat plate using Netwon's formula
+% Calculates aerodynamic coefficients for a flat plate using Netwon's formula
 %
 % Inputs:
 %       param_eq    : N/A (blank)
