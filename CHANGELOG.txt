@@ -9,11 +9,12 @@ Always keep a [Unreleased] section at the top for tracking changes
 - Input parameters saved with output files
 - Removed all use of eval
 - Changes to naming conventions for output files 
-- Slight changes to shadow analysis function
 ### Added
 - Automated stl2obj conversion using meshlabserver included
+- CLL model now supported
 ### Removed
 ### Fixed
+- Slight changes to shadow analysis function
 
 ## [2.1] - 2018-11-01
 ### Changed
