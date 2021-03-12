@@ -1,24 +1,5 @@
-function [fileOut] = calc_coeff(fiName, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
-%CALC_COEFF Calcultes local and global coefficients for the triangular mesh geometry
-% Produces one or several output .m files with the following variables
-%
-%   aoa      : Angle of attack [rad]
-%   aos      : Angle of sideslip [rad]
-%   tauDir   : Direction of the tangent vectors (3xN)
-%   delta    : Angles between the flow and the faces [rad] (1xN)
-%   cp       : Face pressure coefficient (1xN)
-%   ctau     : Face shear coefficient (1xN)
-%   cd       : Face drag coefficient (1xN)
-%   cl       : Face lift coefficient (1xN)
-%   Cf_w     : Body force coefficient in wind axes (3x1)
-%   Cf_f     : Body force coefficient in flight axes (3x1)
-%   Cm_B     : Body moment coefficient in body axes (3x1)
-%   Aref     : Reference area used in calculations [m^2]
-%   AreaProj : Projected area to the flow [m^2]
-%   Lref     : Refrence length used for calcualtions [m]
-%   param_eq : Structure containing input GSI parameters
-%
-% where N = number of faces
+% Calculates local and global coefficients for the triangular mesh geometry.
+% Produces one or several output .m files with the object characteristics.
 %
 % Inputs:
 %       fiName   : Name of the .mat file containing the meshdata structure
@@ -40,12 +21,49 @@ function [fileOut] = calc_coeff(fiName, aoaS, aosS, param_eq, flag_shad, flag_so
 %
 % Outputs:
 %       fileOut  : Output file
+%           aoa      : Angle of attack [rad]
+%           aos      : Angle of sideslip [rad]
+%           tauDir   : Direction of the tangent vectors (3xN)
+%           delta    : Angles between the flow and the faces [rad] (1xN)
+%           cp       : Face pressure coefficient (1xN)
+%           ctau     : Face shear coefficient (1xN)
+%           cd       : Face drag coefficient (1xN)
+%           cl       : Face lift coefficient (1xN)
+%           Cf_w     : Body force coefficient in wind axes (3x1)
+%           Cf_f     : Body force coefficient in flight axes (3x1)
+%           Cm_B     : Body moment coefficient in body axes (3x1)
+%           Aref     : Reference area used in calculations [m^2]
+%           AreaProj : Projected area to the flow [m^2]
+%           Lref     : Refrence length used for calcualtions [m]
+%           param_eq : Structure containing input GSI parameters
+%
+% where N = number of faces.
 %
 % Author: David Mostaza-Prieto
 % The University of Manchester
 % November 2012
 %
+%--- Copyright notice ---%
+% Copyright (C) 2021 The University of Manchester
+% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
+%
+% This file is part of the ADBSat toolkit.
+%
+% This program is free software: you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or (at
+% your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+% Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along
+% with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE --------------
+
+function [fileOut] = calc_coeff(fiName, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
 
 % Load mesh parameters
 load([fiName,'.mat']);
