@@ -1,6 +1,34 @@
+%This installation file adds the relevant folders from ADBSat to the MATLAB path.
+%Must not be moved from relative folder.
+%
+%Inputs:
+%   None.
+%
+%Outputs:
+%   None.
+%
+%--- Copyright notice ---%
+% Copyright (C) 2021 The University of Manchester
+% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
+%
+% This file is part of the ADBSat toolkit.
+%
+% This program is free software: you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or (at
+% your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+% Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along
+% with this program. If not, see <http://www.gnu.org/licenses/>.
+%----------- BEGIN CODE -----------%
+
 function [ADBSat_path] = ADBSat_dynpath( )
 %Dynamic Path to ADBSat Base Folder
-% Must not be moved from relative folder
 
 %Get full path to this file as a string
 currentpath = (mfilename('fullpath'));
@@ -8,3 +36,4 @@ currentpath = (mfilename('fullpath'));
 pathparts = split(currentpath, filesep);
 %ADBSat base folder
 ADBSat_path = char(join(pathparts(1:end-2),filesep));
+%---------- END CODE -------------%
