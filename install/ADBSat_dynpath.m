@@ -1,4 +1,4 @@
-%This installation file adds the relevant folders from ADBSat to the MATLAB path.
+%Determines the paths of the relevant folders from ADBSat to be added to MATLAB by the install file.
 %Must not be moved from relative folder.
 %
 %Inputs:
