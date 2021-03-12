@@ -1,5 +1,5 @@
 function h = plot_surfq(fileIn, modIn, aoa, aos, param)
-%PLOT_SURFQ Plots the surface mesh with color proportional to the chosen parameter
+% Plots the surface mesh with color proportional to the chosen parameter
 %
 % Inputs:
 %    file_name  : Name of the file containing the results (fiName_eqmodel)
