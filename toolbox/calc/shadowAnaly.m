@@ -28,9 +28,9 @@ xW = [pAw(1,:);pBw(1,:);pCw(1,:)];
 
 xWmax = max(xW);
 xWmin = min(xW);
-
-indB = find(delta*180/pi>90); % Backward-facing index
-indF = find(delta*180/pi<90); % Forward-facing index
+ 
+indB = find(delta*180/pi>90.0001); % Backward-facing index (use 90.0001 to get a better split because panels at 90 degrees can't shadow)
+indF = find(delta*180/pi<=90.0001); % Forward-facing index
 
 minXwF = min(xWmin(indF));
 maxXwB = max(xWmin(indB));
