@@ -1,11 +1,30 @@
-function [data] = astrophysicalConstants(data)
-%ASTROPHYSICALCONSTANTS creates a structure of useful constants
+% Creates a structure of useful constants.
 %
 % Author: Nicholas H. Crisp
 % The University of Manchester
 % October 2019
 %
+%--- Copyright notice ---%
+% Copyright (C) 2021 The University of Manchester
+% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
+%
+% This file is part of the ADBSat toolkit.
+%
+% This program is free software: you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or (at
+% your option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+% Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along
+% with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE -------------
+
+function [data] = astrophysicalConstants(data)
 
 data.constants.G = 6.67430e-11; % Gravitational constant [m^3/kg s^2]
 data.constants.g0 = 9.80665; %Earth Standard Acceleration due to Gravity [m/s^2]
