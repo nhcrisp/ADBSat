@@ -1,5 +1,5 @@
 function [cp, ctau, cd, cl] = coeff_sentman(param_eq, delta)
-%COEFF_SENTMAN calculates aerodynamic coefficients for a flat plate using Sentman's formula
+% Calculates aerodynamic coefficients for a flat plate using Sentman's formula
 %
 % Inputs:
 %       param_eq.alpha  : Accomodation coefficient
