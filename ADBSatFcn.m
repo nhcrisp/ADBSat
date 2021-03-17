@@ -91,7 +91,7 @@ end
 % Environment Calculations
 [param_eq.V, ~, param_eq.s, Rmean, param_eq.Tinf] = environment(env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14));
 
-param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Velocity of the reflected diffuse molecules
+param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Average velocity of the reflected diffuse molecules
 
 % Calculate Interactions
 aoa = aoa_deg*pi/180; % Angle(s) of attack [rad]
