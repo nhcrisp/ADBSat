@@ -42,6 +42,9 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE --------------
 
+% Constants
+[data] = astrophysicalConstants;
+
 alphaN = param_eq.alphaN;
 sigmaT = param_eq.sigmaT;
 s = param_eq.s;
@@ -107,7 +110,7 @@ sum_cl = 0;
 
 for i = 1: length(rho)
     
-    m_j(i) = (M_j(i)/NA*rho(i)); % [g]
+    m_j(i) = (M_j(i)/data.constants.NA*rho(i)); % [g]
     % Mole/number fraction of each species in the mixture {He, O, N2, O2, H, N}
     % In the computation the presence of molecular species ignored by the
     % analytical implementation is considered
