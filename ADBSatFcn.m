@@ -62,13 +62,13 @@ function [ pathOut ] = ADBSatFcn( modname, param_eq, aoa_deg, aos_deg, flag_shad
 % Check GSIM Inputs
 if strcmpi(param_eq.gsi_model,'CLL')
     if any(~isfield(param_eq,{'alphaN','sigmaT'}))
-        error([param_eq.gsi_model,' model requires alphaN and sigmaT inputs'])
+        error([param_eq.gsi_model,' model requires alphaN & sigmaT inputs'])
     end
 elseif any(strcmpi(param_eq.gsi_model,{'schaaf','storchHyp'}))
     if any(~isfield(param_eq,{'sigmaN','sigmaT'}))
         error([param_eq.gsi_model,' model requires sigmaN and sigmaT inputs'])
     end
-elseif any(strcmpi(param_eq.gsi_model,{'cook','sentman','maxwell'}))
+elseif any(strcmpi(param_eq.gsi_model,{'cook','sentman','maxwell','DRIA'}))
     if ~isfield(param_eq,'alpha')
         error([param_eq.gsi_model,' model requires alpha input'])
     end
@@ -89,7 +89,7 @@ if ~isfield(param_eq,'Tw')
 end
 
 % Environment Calculations
-[param_eq.V, ~, param_eq.s, Rmean, param_eq.Tinf] = environment(env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14));
+[param_eq.V, param_eq.rho, param_eq.s, Rmean, param_eq.Tinf] = environment(env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14));
 
 param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Average velocity of the reflected diffuse molecules
 

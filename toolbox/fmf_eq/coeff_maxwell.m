@@ -52,6 +52,6 @@ cl = ((4*f)/(sqrt(pi)*s))*sin(theta).*cos(theta).*exp(-s^2*sin(theta).^2)...
     + (cos(theta)/s^2).*(1+f*(1+4*s^2*sin(theta).^2)).*erf(s*sin(theta))...
     + ((1-f)/s)*sqrt(pi)*sin(theta).*cos(theta)*sqrt(Tw/Tinf);
 
-cp   = cd.*cos(delta) - cl.*sin(delta);
-ctau = cd.*sin(delta) + cl.*cos(delta);
+cp   = cd.*cos(delta) + cl.*sin(delta);
+ctau = cd.*sin(delta) - cl.*cos(delta);
 %----------- END CODE ----------

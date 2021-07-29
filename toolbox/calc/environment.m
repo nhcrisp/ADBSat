@@ -13,7 +13,7 @@
 %
 % Outputs:
 %   vinf            : Free flow bulk velocity [m s^-1]
-%   rhoTot          : Total atmospheric density in [kg m^-3]
+%   rho             : Atmospheric densities
 %   s               : Speed ratio [-]
 %   Rmean           : Specific gas constant [J kg^-1 K^-1]
 %   Talt            : Temperature at altitude [K]
@@ -42,7 +42,7 @@
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE -------------
 
-function [ vinf, rhoTot, s, Rmean, Talt ] = environment( h, lat, lon, dayOfYear, UTseconds, f107Average, f107Daily, magneticIndex )
+function [ vinf, rho, s, Rmean, Talt ] = environment( h, lat, lon, dayOfYear, UTseconds, f107Average, f107Daily, magneticIndex )
 
 % Constants
 [data] = astrophysicalConstants;
@@ -52,7 +52,6 @@ function [ vinf, rhoTot, s, Rmean, Talt ] = environment( h, lat, lon, dayOfYear,
 
 % Format density and temperature data
 Talt = T(2);
-rhoTot = rho(6);
 
 % Calculate mean molecular mass [g mol^-1]
 mbar = (data.constants.mHe * rho(1)...

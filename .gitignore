@@ -1,0 +1,5 @@
+*.asv
+inou/models/*
+inou/obj_files/*
+inou/results/*
+inou/stl_files/*

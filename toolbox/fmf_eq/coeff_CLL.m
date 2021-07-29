@@ -8,8 +8,8 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 %       param_eq.Tw     : wall temperature [K];
 %       param_eq.Tinf   : free stream temperature [K];
 %       param_eq.rho    : structure containing density value [provided by atmosnrlmsise00 model for the termosphere]
-%                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [1/m3] 
-%                         param_eq.rho(6) in [kg/m3] 
+%                         param_eq.rho(i) with i = 1, 2, 3, 4, 5, 7, 8, 9 in [1/m3]
+%                         param_eq.rho(6) in [kg/m3]
 %       delta           : angle between surface normal and the flow
 %
 % Outputs:
@@ -57,7 +57,7 @@ rhoAr = rho(5);
 rhoOa = rho(9);
 
 rho(5) = 0; % density of Argon (not included in the model)
-rho(6) = 0; % total density 
+rho(6) = 0; % total density
 rho(9) = 0; % density of anomalous Oxygen (not included in the model)
 rho(rho == 0) = [];
 
@@ -69,25 +69,27 @@ cl_j = zeros(length(rho),length(delta));   % lift coefficient
 m_j = zeros(length(rho),1);
 xi_j = zeros(length(rho),1);
 
-for i = 1: length(rho) % compute fitted parameters for the species considered [ref: Walker et al.]
-
-    % compute fitted parameters for the species considered [ref: Walker et al.]
+for i = 1: length(rho)
+    
+    % compute fitted parameters for the species considered [ref: Walker et al. (2014)]
     [beta_fp, gamma_fp, delta_fp, zeta_fp] = Fitted_Parameters(i, alphaN);
-    % Define gamma1 and gamma2 function
+    % define aux functions
     x_var = s.*cos(delta);
     gamma1 = 1/sqrt(pi).*(x_var.*exp(-x_var.^2) + sqrt(pi)/2*(1+2*x_var.^2).*(1+erf(x_var)));
-    gamma2 = 1/sqrt(pi).*(exp(-x_var.^2)+sqrt(pi).*x_var.*(1+erf(x_var)));
-    % compute shear stress coefficient
-    ctau_j(i,:,:) = (sigmaT.*sin(delta))./s.*gamma2;
-    % compute normal stress coefficient
-    cp_j(i,:,:) = (1/s^2).*((1+sqrt(1-alphaN))*.gamma1 +...
-        0.5*(exp(-beta_fp.*(1-alphaN).^gamma_fp).*(Tw/Tinf).^delta_fp.*(zeta_fp./s)).*...
-        sqrt(Tw/Tinf)*sqrt(pi).*gamma2);
-
-%     ind = find(delta>pi/2);
-%     ctau(ind) = 0;
-%     cp(ind) = 0;
-
+    gamma2 = 1/sqrt(pi).*(exp(-x_var.^2) + sqrt(pi).*x_var.*(1+erf(x_var)));
+    % compute normal and shear stress coefficients [ref: Mostaza-Prieto PhD Thesis 2017]
+    if alphaN < 1
+        cp_j(i,:) = (1/s^2).*((1+sqrt(1-alphaN)).*gamma1 +...
+            0.5*(exp(-beta_fp.*(1-alphaN).^gamma_fp).*(Tw/Tinf).^delta_fp.*(zeta_fp./s)).*...
+            sqrt(Tw/Tinf)*sqrt(pi).*gamma2);
+        ctau_j(i,:) = (sigmaT.*sin(delta))./s.*gamma2;
+    else % sigmaN = alphaN [ref: Walker et al. (2014)]
+        cp_j(i,:) = 1/s^2.*(((2-alphaN).*s/sqrt(pi).*cos(delta)+alphaN/2*(Tw/Tinf)^0.5).*exp(-s^2.*(cos(delta)).^2)+...
+            ((2-alphaN).*(0.5+s^2.*(cos(delta)).^2)+alphaN/2.*(Tw/Tinf)^0.5.*sqrt(pi).*s.*cos(delta)).*(1+erf(s.*cos(delta))));
+        
+        ctau_j(i,:) = sigmaT.*sin(delta)/(s*sqrt(pi)).*(exp(-s^2.*(cos(delta)).^2)+ s.*sqrt(pi).*cos(delta).*(1+erf(s.*cos(delta))));
+    end
+    
     % compute drag coefficient:
     cd_j(i,:) = cp_j(i,:).*cos(delta) + ctau_j(i,:).*sin(delta);
     % compute lift coefficient:
@@ -114,7 +116,7 @@ for i = 1: length(rho)
     % Mole/number fraction of each species in the mixture {He, O, N2, O2, H, N}
     % In the computation the presence of molecular species ignored by the
     % analytical implementation is considered
-    xi_j(i) = rho(i) / (sum(rho)+rhoAr+rhoOa); 
+    xi_j(i) = rho(i) / (sum(rho)+rhoAr+rhoOa);
     m_avg = m_avg + xi_j(i) * m_j(i); % Average mass of the mixture
     
     sum_ctau = sum_ctau + xi_j(i) * m_j(i).* ctau_j(i,:);
@@ -136,35 +138,71 @@ function [beta, gamma, delta, zeta] = Fitted_Parameters(i, alphaN)
 % Drag Coefficient Model Using the Cercignani–Lampis–Lord Gas–Surface
 % Interaction Model, J. Spacecr. Rockets. 51 (2014) 1544–1563.
 % doi:10.2514/1.A32677
+beta = zeros(1,length(alphaN));
+gamma = zeros(1,length(alphaN));
+delta = zeros(1,length(alphaN));
+zeta = zeros(1,length(alphaN));
 
-if i == 1             % molecular species: He
-    if alphaN >= 0.95 && alphaN <= 1
-        beta = 6.2; gamma = 0.38; delta = 3.3; zeta = 0.74;
-    elseif alphaN >= 0.90 && alphaN <= 0.95 
-        beta = 3.8; gamma = 0.52; delta = 3.4; zeta = 1.12;
-    elseif  alphaN >= 0.50  && alphaN <= 0.90
-        beta = 3.45; gamma = 0.52; delta = 2.4; zeta = 0.93;
-    elseif  alphaN >= 0  && alphaN <= 0.50
-        beta = 0.08; gamma = 0.52; delta = 4.2; zeta = 1.1;
-    end
-elseif i == 2          % molecular species: O
-    beta = 5.85; gamma = 0.2; delta = 0.48; zeta = 31;
-elseif i == 3          % molecular species: N2
-    beta = 6.6; gamma = 0.22; delta = 0.48; zeta = 35;
-elseif i == 4          % molecular species: O2
-    beta = 6.3; gamma = 0.26; delta = 0.42; zeta = 20.5;
-elseif i == 5          % molecular species: H 
-    if alphaN >= 0.95 && alphaN <= 1
-        beta = 3.9; gamma = 0.195; delta = 1.4; zeta = 0.3;
-    elseif alphaN >= 0.90 && alphaN <= 0.95 
-        beta = 3.5; gamma = 0.42; delta = 2; zeta = 0.72;
-    elseif  alphaN >= 0.50  && alphaN <= 0.90
-        beta = 3.45; gamma = 0.52; delta = 2.4; zeta = 0.93;
-    elseif  alphaN >= 0  && alphaN <= 0.50
-        beta = 0.095; gamma = 0.465; delta = 2.9; zeta = 0.92;
-    end
-elseif i == 6           % molecular species: N
-    beta = 4.9; gamma = 0.32; delta = 0.42; zeta = 8;
+if i == 1 % molecular species: He
+    beta(alphaN >= 0.95 & alphaN <= 1) = 6.2;
+    gamma(alphaN >= 0.95 & alphaN <= 1) = 0.38;
+    delta(alphaN >= 0.95 & alphaN <= 1) = 3.3;
+    zeta(alphaN >= 0.95 & alphaN <= 1) = 0.74;
+    %
+    beta(alphaN >= 0.90 & alphaN <= 0.95) = 3.8;
+    gamma(alphaN >= 0.90 & alphaN <= 0.95) = 0.52;
+    delta(alphaN >= 0.90 & alphaN <= 0.95) = 3.4;
+    zeta(alphaN >= 0.90 & alphaN <= 0.95) = 1.12;
+    %
+    beta(alphaN >= 0.50  & alphaN <= 0.90) = 3.45;
+    gamma(alphaN >= 0.50  & alphaN <= 0.90) = 0.52;
+    delta(alphaN >= 0.50  & alphaN <= 0.90) = 2.4;
+    zeta(alphaN >= 0.50  & alphaN <= 0.90) = 0.93;
+    %
+    beta(alphaN >= 0  & alphaN <= 0.50) = 0.08;
+    gamma(alphaN >= 0  & alphaN <= 0.50) = 0.52;
+    delta(alphaN >= 0  & alphaN <= 0.50) = 4.2;
+    zeta(alphaN >= 0  & alphaN <= 0.50) = 1.1;
+elseif i == 2 % molecular species: O
+    beta = 5.85;
+    gamma = 0.2;
+    delta = 0.48;
+    zeta = 31;
+elseif i == 3 % molecular species: N2
+    beta = 6.6;
+    gamma = 0.22;
+    delta = 0.48;
+    zeta = 35;
+elseif i == 4 % molecular species: O2
+    beta = 6.3;
+    gamma = 0.26;
+    delta = 0.42;
+    zeta = 20.5;
+elseif i == 5 % molecular species: H
+    beta(alphaN >= 0.95 & alphaN <= 1) = 3.9;
+    gamma(alphaN >= 0.95 & alphaN <= 1) = 0.195;
+    delta(alphaN >= 0.95 & alphaN <= 1) = 1.4;
+    zeta(alphaN >= 0.95 & alphaN <= 1) = 0.3;
+    %
+    beta(alphaN >= 0.90 & alphaN <= 0.95) = 3.5;
+    gamma(alphaN >= 0.90 & alphaN <= 0.95) = 0.42;
+    delta(alphaN >= 0.90 & alphaN <= 0.95) = 2;
+    zeta(alphaN >= 0.90 & alphaN <= 0.95) = 0.72;
+    %
+    beta(alphaN >= 0.50  & alphaN <= 0.90) = 3.45;
+    gamma(alphaN >= 0.50  & alphaN <= 0.90) = 0.52;
+    delta(alphaN >= 0.50  & alphaN <= 0.90) = 2.4;
+    zeta(alphaN >= 0.50  & alphaN <= 0.90) = 0.93;
+    %
+    beta(alphaN >= 0  & alphaN <= 0.50) = 0.095;
+    gamma(alphaN >= 0  & alphaN <= 0.50) = 0.465;
+    delta(alphaN >= 0  & alphaN <= 0.50) = 2.9;
+    zeta(alphaN >= 0  & alphaN <= 0.50) = 0.92;
+elseif i == 6 % molecular species: N
+    beta = 4.9;
+    gamma = 0.32;
+    delta = 0.42;
+    zeta = 8;
 end
 
 end
