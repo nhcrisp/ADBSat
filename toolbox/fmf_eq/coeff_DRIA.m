@@ -40,29 +40,11 @@ function [cp, ctau, cd, cl] = coeff_DRIA(param_eq, delta)
 
 [data] = astrophysicalConstants;
 
-%Tinf = param_eq.Tinf;
-Vinf = param_eq.V;
+Vinf = param_eq.vinf;
 alpha = param_eq.alpha;
 s = param_eq.s;
 Tw = param_eq.Tw;
-rho = param_eq.rho;
-
-rhoHe = rho(1);
-rhoO = rho(2);
-rhoN2 = rho(3);
-rhoO2 = rho(4);
-rhoAr = rho(5);
-%rhoTot = rho(6);
-rhoH = rho(7);
-rhoN = rho(8);
-%rhoAnO = rho(9);
-
-% Calculate mean molecular mass
-Mmean = (data.constants.mHe*rhoHe + data.constants.mO*rhoO +...
-    data.constants.mN2*rhoN2 + data.constants.mO2*rhoO2 +...
-    data.constants.mAr*rhoAr + data.constants.mH*rhoH +...
-    data.constants.mN*rhoN)./...
-    (rhoHe + rhoO + rhoN2 + rhoO2 + rhoAr + rhoH + rhoN); % [g mol^-1]
+mmean = param_eq.mmean;
 
 %T_ki = ((Mmean*1e-3)/data.constants.NA * Vinf^2)/(3*data.constants.kb); % Incoming kinetic temperature [K]
 %T_kr  = T_ki*(1-alpha) + alpha*Tw; % Reflected kinetic temperature [K]
@@ -73,7 +55,7 @@ P = exp(-cos(delta).^2 * s.^2)./s;
 G = 1/(2*s.^2);
 Q = 1+G;
 Z = 1+erf(cos(delta).*s);
-R = data.constants.R/Mmean * 1e3;
+R = data.constants.R/mmean * 1e3; % Specifc gas constant 
 Vratio = sqrt((1/2)*(1+alpha.*((4*R*Tw)./Vinf.^2 - 1))); % [Doornbos 2012]
 
 cd = P./sqrt(pi) + cos(delta).*Q.*Z + 0.5*cos(delta).*Vratio.*(cos(delta).*sqrt(pi).*Z+P);

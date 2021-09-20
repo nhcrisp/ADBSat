@@ -63,10 +63,12 @@
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE --------------
 
-function [fileOut] = calc_coeff(fiName, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
+function [fileOut] = calc_coeff(fiName, respath, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
+
+[~,matName,~] = fileparts(fiName);
 
 % Load mesh parameters
-load([fiName,'.mat']);
+load(fiName,'meshdata');
 x = meshdata.XData;
 y = meshdata.YData;
 z = meshdata.ZData;
@@ -85,19 +87,19 @@ if verb
 end
 
 % Create output folder if required
-ADBSat_path = ADBSat_dynpath;
 if (indexAoA*indexAoS) > 1
-    res_path = fullfile(ADBSat_path,'inou','results');
-    foldname = strcat(fiName,'_',datestr(now,30),'_',num2str(randi(1000)));
-    mkdir(fullfile(res_path,foldname,filesep));
-    pathsav = fullfile(res_path,foldname);
+    foldname = strcat(matName,'_',datestr(now,30),'_',num2str(randi(1000)));
+    mkdir(fullfile(respath,filesep,foldname));
+    pathsav = fullfile(respath,foldname);
+    aedb = 1;
 else
-    pathsav = fullfile(ADBSat_path,'inou','results');
+    pathsav = fullfile(respath);
+    aedb = 0;
 end
 
 % Values to save in output
 var_out = {'aoa';'aos';'tauDir';'delta';'cp';'ctau';'cd';'cl';...
-    'Cf_w';'Cf_f';'Cm_B';'Cf_s';'Cm_S';'Aref';'AreaProj';'Lref';'param_eq'};
+    'Cf_w';'Cf_f';'Cm_B';'Aref';'AreaProj';'Lref';'param_eq'};
 if flag_sol
     var_out = [var_out;{'Cf_s';'Cm_S'}];
 end
@@ -187,8 +189,13 @@ for ii = 1:indexAoA
         end
         
         % Save file
-        fileOut = fullfile(pathsav,[fiName,'_a',mat2str(aoa*180/pi),'s',...
-            mat2str(aos*180/pi),'.mat']);
+        if aedb
+            fileOut = fullfile(pathsav,[matName,'_a',mat2str(aoa*180/pi),'_s',...
+                mat2str(aos*180/pi),'.mat']);
+        else
+            fileOut = [pathsav,'.mat'];
+        end
+        
         save(fileOut, var_out{:})
         
         if verb

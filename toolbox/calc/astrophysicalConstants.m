@@ -41,7 +41,7 @@ data.constants.c = 3e8; % Speed of light [m/s]
 data.constants.P_SRP = 4.575e-6; % Nominal solar pressure [N/m^2]
 data.constants.AU = 1.49597870700e11; % Astronomical Unit [m]
 
-data.constants.R = 8.3144621; % Molar (Universal/Ideal) Gas constant [J K^-1 mol^-1]
+data.constants.R = 8.31446261815324; % Molar (Universal/Ideal) Gas constant [J K^-1 mol^-1]
 data.constants.kb = 1.3806503e-23; % Boltzmann constant [m^2 kg^-2 K^-1]
 data.constants.NA = 6.02214076e23; % Avogadro constant [n mol^-1]
 
