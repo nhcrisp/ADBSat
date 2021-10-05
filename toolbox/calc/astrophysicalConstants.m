@@ -52,5 +52,6 @@ data.constants.mO2 = 32; % Molecular mass of O2 [g mol^-1]
 data.constants.mAr = 40; % Molecular mass of Ar [g mol^-1]
 data.constants.mH = 1; % Molecular mass of H [g mol^-1]
 data.constants.mN = 14; % Molecular mass of N [g mol^-1]
+data.constants.mAnO = 15.99; % Molecular mass of anomalous oxygen [g mol^-1]
 
 %------------- END OF CODE --------------

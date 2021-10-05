@@ -110,7 +110,11 @@ for ii = 1:indexAoA
         aoa = aoaS(ii);
         aos = aosS(jj);
         
-        L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+        %L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+        L_wb = [cos(aos)*cos(aoa), sin(aos), sin(aoa)*cos(aos);...
+            -sin(aos)*cos(aoa), cos(aos), -sin(aoa)*sin(aos);...
+            -sin(aoa), 0, cos(aoa)]; % Body to Wind
+        
         L_gb = [1 0 0; 0 -1 0; 0 0 -1]; % Body to Geometric
         L_gw = L_gb*L_wb'; % Wind to Geometric
         L_fb = [-1 0 0; 0 1 0; 0 0 -1]; % Body to Flight
