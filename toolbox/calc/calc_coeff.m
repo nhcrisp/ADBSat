@@ -99,7 +99,7 @@ end
 
 % Values to save in output
 var_out = {'aoa';'aos';'tauDir';'delta';'cp';'ctau';'cd';'cl';...
-    'Cf_w';'Cf_f';'Cm_B';'Aref';'AreaProj';'Lref';'param_eq'};
+    'Cf_w';'Cf_f';'Cm_B';'Aref';'AreaProj';'Lref';'param_eq';'shadow'};
 if flag_sol
     var_out = [var_out;{'Cf_s';'Cm_S'}];
 end
@@ -138,11 +138,14 @@ for ii = 1:indexAoA
             [cn, cs] = coeff_solar(delta, param_eq);
         end
         
-        % Shadow analysis
-        indB = find(delta*180/pi>90);
+        % Backwards facing panels
         areaB = areas;
-        areaB(indB) = 0;
+        areaB(delta*180/pi>90) = 0;
         
+        shadow = zeros(size(areas));
+        shadow(areaB == 0) = 1;
+        
+        % Shadow analysis
         if flag_shad
             [shadPan] = shadowAnaly(x, y, z, barC, delta, L_gw);
             
@@ -153,14 +156,14 @@ for ii = 1:indexAoA
             areaB(shadPan) = 0;
             
             cn(shadPan) = 0;
-            cs(shadPan) = 0;
+            cs(shadPan) = 0;            
+            shadow(shadPan) = 0.5;
         end
-        
+  
         % Areas
-        AreaProj = areaB*cos(delta)';
-        AreaT = sum(areas);
-        
-        Aref = AreaT/2;
+        AreaProj = areaB*cos(delta)'; % Projected
+        AreaT = sum(areas); % Total
+        Aref = AreaT/2; % ADBSat Reference
         
         % Shear direction
         tauDir = cross(surfN,cross(vMatrix,surfN)); % direction of the shear coefficient
