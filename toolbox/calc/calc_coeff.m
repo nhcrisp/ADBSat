@@ -131,6 +131,15 @@ for ii = 1:indexAoA
         % Angles between flow and normals
         delta = real(acos(dot(-vMatrix,surfN)));
         
+        uD = vMatrix; % Unit drag vector
+        uL = -cross(cross(uD,surfN),uD)./vecnorm(cross(cross(uD,surfN),uD)); % Unit lift vector for each panel
+        % Undefined uL panels (plates normal to flow)
+        col = find(all(isnan(uL),1));
+        uL(:,col) = -surfN(:,col);
+        % Negative dot product of unit drag and lift vectors with surface normal vector (March 2019)
+        param_eq.gamma = dot(-uD,surfN);
+        param_eq.ell = dot(-uL,surfN);
+        
         % Local flat plate coefficients
         [cp, ctau, cd, cl] = mainCoeff(param_eq, delta, matID);
         

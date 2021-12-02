@@ -44,42 +44,33 @@ function [cp, ctau, cd, cl] = coeff_DRIA(param_eq, delta)
 Tinf = param_eq.Tinf;
 Vinf = param_eq.vinf;
 alpha = param_eq.alpha;
-s = param_eq.s;
+%s = param_eq.s;
 Tw = param_eq.Tw;
-mmean = param_eq.mmean;
+%mmean = param_eq.mmean;
 massConc = param_eq.massConc;
 
-m = [data.constants.mH, data.constants.mHe, data.constants.mN,...
-    data.constants.mO, data.constants.mAnO, data.constants.mN2,...
-    data.constants.mO2, data.constants.mAr];
+m = [data.constants.mHe, data.constants.mO, data.constants.mN2,...
+    data.constants.mO2, data.constants.mAr, data.constants.mH,...
+    data.constants.mN, data.constants.mAnO];
 
-gam = cos(delta);
-ell = sin(2*delta);
+gam = param_eq.gamma; %cos(delta);
+ell = param_eq.ell; %sin(delta);
 
 for j = 1:8 % Species specific (by mass concentration)
-    s_j = Vinf./sqrt(2*data.constants.kb*Tinf/(m(j)/data.constants.NA/1000));
-    P = exp(-gam.^2 * s_j.^2)./s_j;
-    G = 1/(2*s_j.^2);
+    s(j) = Vinf./sqrt(2*(data.constants.kb/(m(j)/data.constants.NA/1000)*Tinf));
+    P = exp(-gam.^2 * s(j).^2)./s(j);
+    G = 1/(2*s(j).^2);
     Q = 1+G;
-    Z = 1+erf(gam.*s_j);
+    Z = 1+erf(gam.*s(j));
     R = data.constants.R/m(j) * 1e3; % Specifc gas constant
     Vratio = sqrt((1/2)*(1+alpha.*((4*R*Tw)./Vinf.^2 - 1))); % [Doornbos 2012]
-    cd_j(:,j) = P./sqrt(pi) + gam.*Q.*Z + 0.5*gam.*Vratio.*(gam.*sqrt(pi).*Z + P);
-    cl_j(:,j) = ell.*G.*Z + 0.5*ell.*Vratio.*(gam.*sqrt(pi).*Z + P);
+    cd_j(:,j) = P./sqrt(pi) + gam.*Q.*Z + (0.5*gam).*Vratio.*(gam.*sqrt(pi).*Z + P);
+    cl_j(:,j) = ell.*G.*Z + (0.5*ell).*Vratio.*(gam.*sqrt(pi).*Z + P);
 end
+s_av = sum(s.*repmat(massConc,[size(s,1),1]),2)'; % Species weighted average speed ratio
+%
 cd = sum(cd_j.*repmat(massConc,[size(cd_j,1),1]),2)';
 cl = sum(cl_j.*repmat(massConc,[size(cd_j,1),1]),2)';
-
-% gam = cos(delta);
-% ell = sin(2*delta);
-% P = exp(-gam.^2 * s.^2)./s;
-% G = 1/(2*s.^2);
-% Q = 1+G;
-% Z = 1+erf(gam.*s);
-% R = data.constants.R/mmean * 1e3; % Specifc gas constant
-% Vratio = sqrt((1/2)*(1+alpha.*((4*R*Tw)./Vinf.^2 - 1))); % [Doornbos 2012]
-% cd = P./sqrt(pi) + gam.*Q.*Z + 0.5*gam.*Vratio.*(gam.*sqrt(pi).*Z + P);
-% cl = ell.*G.*Z + 0.5*ell.*Vratio.*(gam.*sqrt(pi).*Z + P);
 
 cp   = cd.*cos(delta) + cl.*sin(delta);
 ctau = cd.*sin(delta) - cl.*cos(delta);

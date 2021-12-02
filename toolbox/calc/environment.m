@@ -63,6 +63,9 @@ param_eq.Tinf = T(2);
 
 % Calculate mean molecular mass [g mol^-1]
 if AnO
+    rhoT = (param_eq.rho(1)+param_eq.rho(2)+param_eq.rho(3)+param_eq.rho(4)+param_eq.rho(5)+param_eq.rho(7)+param_eq.rho(8)+param_eq.rho(9));
+    param_eq.massConc(1,8) = param_eq.rho(8)*(data.constants.mAnO/data.constants.NA/1000)/rhoT;
+
     param_eq.mmean = (data.constants.mHe * param_eq.rho(1)...
         + data.constants.mO * param_eq.rho(2)...
         + data.constants.mN2 * param_eq.rho(3)...
@@ -71,8 +74,10 @@ if AnO
         + data.constants.mH *  param_eq.rho(7)...
         + data.constants.mN * param_eq.rho(8)...
         + data.constants.mAnO * param_eq.rho(9))...
-        /(param_eq.rho(1)+param_eq.rho(2)+param_eq.rho(3)+param_eq.rho(4)+param_eq.rho(5)+param_eq.rho(7)+param_eq.rho(8)+param_eq.rho(9));
+        /rhoT;
 else
+    rhoT = (param_eq.rho(1)+param_eq.rho(2)+param_eq.rho(3)+param_eq.rho(4)+param_eq.rho(5)+param_eq.rho(7)+param_eq.rho(8));
+
     param_eq.mmean = (data.constants.mHe * param_eq.rho(1)...
         + data.constants.mO * param_eq.rho(2)...
         + data.constants.mN2 * param_eq.rho(3)...
@@ -80,8 +85,16 @@ else
         + data.constants.mAr * param_eq.rho(5)...
         + data.constants.mH *  param_eq.rho(7)...
         + data.constants.mN * param_eq.rho(8))...
-        /(param_eq.rho(1)+param_eq.rho(2)+param_eq.rho(3)+param_eq.rho(4)+param_eq.rho(5)+param_eq.rho(7)+param_eq.rho(8));
+        /rhoT;
 end
+
+param_eq.massConc(1,1) = param_eq.rho(1)/rhoT;
+param_eq.massConc(1,2) = param_eq.rho(2)/rhoT;
+param_eq.massConc(1,3) = param_eq.rho(3)/rhoT;
+param_eq.massConc(1,4) = param_eq.rho(4)/rhoT;
+param_eq.massConc(1,5) = param_eq.rho(5)/rhoT;
+param_eq.massConc(1,6) = param_eq.rho(7)/rhoT;
+param_eq.massConc(1,7) = param_eq.rho(8)/rhoT;
 
 % Calculate specific gas constant [J kg^-1 K^-1]
 param_eq.Rmean = (data.constants.R/param_eq.mmean)*1000;
