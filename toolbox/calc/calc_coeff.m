@@ -228,7 +228,7 @@ end
 
 if (indexAoA*indexAoS) > 1
     % Creates a merged aerodynamic database from multiple .mat files
-    fileOut  = mergeAEDB(pathsav, fiName, del);
+    fileOut  = mergeAEDB(pathsav, matName, del);
 end
 
 %------------- END OF CODE --------------

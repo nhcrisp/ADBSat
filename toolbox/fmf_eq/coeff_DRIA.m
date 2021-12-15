@@ -56,7 +56,7 @@ m = [data.constants.mHe, data.constants.mO, data.constants.mN2,...
 gam = param_eq.gamma; %cos(delta);
 ell = param_eq.ell; %sin(delta);
 
-for j = 1:8 % Species specific (by mass concentration)
+for j = 1:length(massConc) % Species specific (by mass concentration)
     s(j) = Vinf./sqrt(2*(data.constants.kb/(m(j)/data.constants.NA/1000)*Tinf));
     P = exp(-gam.^2 * s(j).^2)./s(j);
     G = 1/(2*s(j).^2);
