@@ -63,7 +63,7 @@ axlength = 0.7*s.Lref;
 % Reference Point
 x0 = [0;0;0]; y0 = [0;0;0]; z0 = [0;0;0];
 
-figure
+hFig = figure;
 hold on
 %Wind
 W = quiver3(x0,y0,z0,L_gw(:,1),L_gw(:,2),L_gw(:,3),axlength, 'b');
@@ -88,5 +88,19 @@ xlabel('x'); ylabel('y'); zlabel('z')
 title(char(string1,string2))
 
 axis equal
+
+% Set custom update function
+dcm = datacursormode(hFig);
+set(dcm,'UpdateFcn',{@myupdatefcn,s.(param),param});
+end
+
+function txt = myupdatefcn(~,evt,data,name)
+    pos = get(evt,'Position');
+    ind = ceil(get(evt, 'DataIndex')/3);
+    txt = { sprintf('(x,y,z): (%g, %g, %g)', pos(1:3)),...
+            sprintf('index: %g', ind),...
+            sprintf('%s value: %g', name, data(ind))
+          };
+end
 
 %------------- END OF CODE --------------
