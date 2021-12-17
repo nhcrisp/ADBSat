@@ -43,7 +43,7 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 %------------- BEGIN CODE --------------
 
 % Constants
-[data] = astrophysicalConstants;
+[data] = ADBSatConstants;
 
 alphaN = param_eq.alphaN;
 sigmaT = param_eq.sigmaT;

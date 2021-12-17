@@ -46,7 +46,7 @@
 function [ param_eq ] = environment( param_eq, h, lat, lon, dayOfYear, UTseconds, f107Average, f107Daily, magneticIndex, AnO )
 
 % Constants
-[data] = astrophysicalConstants;
+[data] = ADBSatConstants;
 
 if AnO
     Oflag = 'Oxygen';
@@ -100,7 +100,7 @@ param_eq.massConc(1,7) = param_eq.rho(8)/param_eq.rho(6) * (data.constants.mN2/d
 param_eq.Rmean = (data.constants.R/param_eq.mmean)*1000;
 
 % Orbital velocity [m s^-1]
-param_eq.vinf = sqrt(data.constants.mu/(data.constants.R_E+h));
+param_eq.vinf = sqrt(data.constants.mu_E/(data.constants.R_E+h));
 
 % Thermal velocity
 param_eq.vth = sqrt(2*data.constants.kb*param_eq.Tinf/(param_eq.mmean/data.constants.NA/1000));

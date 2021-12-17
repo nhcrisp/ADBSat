@@ -39,7 +39,7 @@ function [cp, ctau, cd, cl] = coeff_DRIA(param_eq, delta)
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE -------------
 
-[data] = astrophysicalConstants;
+[data] = ADBSatConstants;
 
 Tinf = param_eq.Tinf;
 Vinf = param_eq.vinf;
