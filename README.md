@@ -57,6 +57,7 @@ ADBSat may therefore lose accuracy when:
 |     |     └── shadowAnaly.m                   #Checks if some mesh panels are shadowed by others.
 |     ├── fmf_eq                                #Directory containing GSI model equations to calculate the drag coefficient.
 |     |     ├── coeff_CLL.m                     #Cercignani-Lampis-Lord model.
+|     |     ├── coeff_DRIA.m                    #Diffuse Reflection with Incomplete Accommodation model.
 |     |     ├── coeff_cook.m                    #Cook model.
 |     |     ├── coeff_maxwell.m                 #Maxwell model.
 |     |     ├── coeff_newton.m                  #Newton hard-sphere model.
@@ -79,6 +80,7 @@ ADBSat may therefore lose accuracy when:
 ├── ADBSatFcn.m                                 #Function which runs ADBSat.
 ├── ADBSatImport.m                              #Function which imports a .obj CAD file to a .mat file.
 ├── CHANGELOG.txt                               #Log of changes to the program.
+├── LICENSE.txt                                 #License file.
 └── README.md                                   #README file.
 ```
 
