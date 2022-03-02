@@ -1,4 +1,4 @@
-function [ pathOut ] = ADBSatFcn( modname, param_eq, aoa_deg, aos_deg, flag_shadow, flag_solar, env, del, verb )
+function [ pathOut ] = ADBSatFcn( modpath, respath, param_eq, aoa_deg, aos_deg, flag_shadow, flag_solar, env, del, verb )
 %ADBSATFCN Creates a .mat file(s) in "/inou/results" with the following fields:
 %
 % Inputs:
@@ -88,14 +88,17 @@ if ~isfield(param_eq,'Tw')
     param_eq.Tw = 300; % Surface temperature [K]
 end
 
-% Environment Calculations
-[param_eq.V, param_eq.rho, param_eq.s, Rmean, param_eq.Tinf] = environment(env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14));
 
-param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Average velocity of the reflected diffuse molecules
+if numel(env) > 1
+    % Environment Calculations
+    param_eq = environment(param_eq, env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14),env(15));
+end
+
+%param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Average velocity of the reflected diffuse molecules
 
 % Calculate Interactions
 aoa = aoa_deg*pi/180; % Angle(s) of attack [rad]
 aos = aos_deg*pi/180; % Angle(s) of sideslip [rad]
-pathOut = calc_coeff(modname, aoa, aos, param_eq, flag_shadow, flag_solar, del, verb);
+pathOut = calc_coeff(modpath, respath, aoa, aos, param_eq, flag_shadow, flag_solar, del, verb);
 
 %------------- END OF CODE --------------

@@ -63,10 +63,12 @@
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE --------------
 
-function [fileOut] = calc_coeff(fiName, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
+function [fileOut] = calc_coeff(fiName, respath, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
+
+[~,matName,~] = fileparts(fiName);
 
 % Load mesh parameters
-load([fiName,'.mat']);
+load(fiName,'meshdata');
 x = meshdata.XData;
 y = meshdata.YData;
 z = meshdata.ZData;
@@ -85,19 +87,19 @@ if verb
 end
 
 % Create output folder if required
-ADBSat_path = ADBSat_dynpath;
 if (indexAoA*indexAoS) > 1
-    res_path = fullfile(ADBSat_path,'inou','results');
-    foldname = strcat(fiName,'_',datestr(now,30),'_',num2str(randi(1000)));
-    mkdir(fullfile(res_path,foldname,filesep));
-    pathsav = fullfile(res_path,foldname);
+    foldname = strcat(matName,'_',datestr(now,30),'_',num2str(randi(1000)));
+    mkdir(fullfile(respath,filesep,foldname));
+    pathsav = fullfile(respath,foldname);
+    aedb = 1;
 else
-    pathsav = fullfile(ADBSat_path,'inou','results');
+    pathsav = fullfile(respath);
+    aedb = 0;
 end
 
 % Values to save in output
 var_out = {'aoa';'aos';'tauDir';'delta';'cp';'ctau';'cd';'cl';...
-    'Cf_w';'Cf_f';'Cm_B';'Cf_s';'Cm_S';'Aref';'AreaProj';'Lref';'param_eq'};
+    'Cf_w';'Cf_f';'Cm_B';'Aref';'AreaProj';'Lref';'param_eq';'shadow'};
 if flag_sol
     var_out = [var_out;{'Cf_s';'Cm_S'}];
 end
@@ -108,7 +110,11 @@ for ii = 1:indexAoA
         aoa = aoaS(ii);
         aos = aosS(jj);
         
-        L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+        %L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+        L_wb = [cos(aos)*cos(aoa), sin(aos), sin(aoa)*cos(aos);...
+            -sin(aos)*cos(aoa), cos(aos), -sin(aoa)*sin(aos);...
+            -sin(aoa), 0, cos(aoa)]; % Body to Wind
+        
         L_gb = [1 0 0; 0 -1 0; 0 0 -1]; % Body to Geometric
         L_gw = L_gb*L_wb'; % Wind to Geometric
         L_fb = [-1 0 0; 0 1 0; 0 0 -1]; % Body to Flight
@@ -125,6 +131,15 @@ for ii = 1:indexAoA
         % Angles between flow and normals
         delta = real(acos(dot(-vMatrix,surfN)));
         
+        uD = vMatrix; % Unit drag vector
+        uL = -cross(cross(uD,surfN),uD)./vecnorm(cross(cross(uD,surfN),uD)); % Unit lift vector for each panel
+        % Undefined uL panels (plates normal to flow)
+        col = find(all(isnan(uL),1));
+        uL(:,col) = -surfN(:,col);
+        % Negative dot product of unit drag and lift vectors with surface normal vector (March 2019)
+        param_eq.gamma = dot(-uD,surfN);
+        param_eq.ell = dot(-uL,surfN);
+        
         % Local flat plate coefficients
         [cp, ctau, cd, cl] = mainCoeff(param_eq, delta, matID);
         
@@ -132,11 +147,14 @@ for ii = 1:indexAoA
             [cn, cs] = coeff_solar(delta, param_eq);
         end
         
-        % Shadow analysis
-        indB = find(delta*180/pi>90);
+        % Backwards facing panels
         areaB = areas;
-        areaB(indB) = 0;
+        areaB(delta*180/pi>90) = 0;
         
+        shadow = zeros(size(areas));
+        shadow(areaB == 0) = 1;
+        
+        % Shadow analysis
         if flag_shad
             [shadPan] = shadowAnaly(x, y, z, barC, delta, L_gw);
             
@@ -147,14 +165,14 @@ for ii = 1:indexAoA
             areaB(shadPan) = 0;
             
             cn(shadPan) = 0;
-            cs(shadPan) = 0;
+            cs(shadPan) = 0;            
+            shadow(shadPan) = 0.5;
         end
-        
+  
         % Areas
-        AreaProj = areaB*cos(delta)';
-        AreaT = sum(areas);
-        
-        Aref = AreaT/2;
+        AreaProj = areaB*cos(delta)'; % Projected
+        AreaT = sum(areas); % Total
+        Aref = AreaT/2; % ADBSat Reference
         
         % Shear direction
         tauDir = cross(surfN,cross(vMatrix,surfN)); % direction of the shear coefficient
@@ -187,8 +205,13 @@ for ii = 1:indexAoA
         end
         
         % Save file
-        fileOut = fullfile(pathsav,[fiName,'_a',mat2str(aoa*180/pi),'s',...
-            mat2str(aos*180/pi),'.mat']);
+        if aedb
+            fileOut = fullfile(pathsav,[matName,'_a',mat2str(aoa*180/pi),'_s',...
+                mat2str(aos*180/pi),'.mat']);
+        else
+            fileOut = [pathsav,'.mat'];
+        end
+        
         save(fileOut, var_out{:})
         
         if verb
@@ -205,7 +228,7 @@ end
 
 if (indexAoA*indexAoS) > 1
     % Creates a merged aerodynamic database from multiple .mat files
-    fileOut  = mergeAEDB(pathsav, fiName, del);
+    fileOut  = mergeAEDB(pathsav, matName, del);
 end
 
 %------------- END OF CODE --------------

@@ -1,5 +1,18 @@
 function [cp, ctau, cd, cl] = coeff_sentman(param_eq, delta)
-% Calculates aerodynamic coefficients for a flat plate using Sentman's formula
+% Calculates aerodynamic coefficients for a flat plate using Sentman's [1]
+% formula. Assumes the Schamberg's [2] modification to account for incomplete
+% accommodation and the Moe et al. [3] correction factor of sqrt(2/3).
+%
+% [1] Sentman LH (1961) Free molecule flow theory and its application to
+% the determination of aerodynamic forces. Sunnyvale, CA
+%
+% [2] Schamberg R (1959) A New Analytic Representation of Surface
+% Interaction for Hyperthermal Free Molecule Flow with Applications to
+% Neutral-particle Drag Estimates of Satellites. Rand Corporation
+%
+% [3] 1. Moe K, Moe MM, Rice CJ (2004) Simultaneous Analysis of
+% Multi-Instrument Satellite Measurements of Atmospheric Density. J Spacecr
+% Rockets 41:849–853.https://doi.org/10.2514/1.2090
 %
 % Inputs:
 %       param_eq.alpha  : Accomodation coefficient

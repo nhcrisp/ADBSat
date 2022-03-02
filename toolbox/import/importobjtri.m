@@ -1,4 +1,4 @@
-function [ pathSav ] = importobjtri( fileIn, struName, verb )
+function [ pathSav ] = importobjtri( fileIn, pathOut, struName, verb )
 % Imports a triangular mesh from a .obj file
 %
 % Inputs:
@@ -47,9 +47,7 @@ meshdata.SurfN = surfN;
 meshdata.BariC = bariC;
 meshdata.Lref  = Lref;
 
-ADBSat_path = ADBSat_dynpath;
-
-pathSav = fullfile(ADBSat_path,'inou','models',[struName,'.mat']);
+pathSav = fullfile(pathOut,[struName,'.mat']);
 
 save(pathSav, 'meshdata')
 
@@ -68,7 +66,7 @@ if verb
     fprintf('Minumum element area: %f\n', MinArea);
     fprintf('Reference length (maxX-minX): %f\n', Lref);
     fprintf('Number of material references: %u\n', nMat);
-    fprintf('Created file ''%s.mat'' \n', pathSav);
+    fprintf('Created file ''%s'' \n', pathSav);
 end
 
 %------------- END OF CODE --------------

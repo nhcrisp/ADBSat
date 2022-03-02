@@ -50,7 +50,7 @@ ADBSat may therefore lose accuracy when:
 |     └── ADBSat_install.m                      #Installs ADBSat and adds necessary paths to toolbox.
 ├── toolbox                                     #Directory containing the program functions.
 |     ├── calc                                  #Directory containing general calculation functions.
-|     |     ├── astrophysicalConstants.m        #Creates useful constants.
+|     |     ├── ADBSatConstants.m               #Creates useful constants.
 |     |     ├── calc_coeff.m                    #Calculates local and global aerodynamic and solar coefficients.
 |     |     ├── environment.m                   #Interfaces with the MATLAB version of the NRLMSISE-00 atmospheric model.
 |     |     ├── insidetri.m                     #Checks if a point is inside a triangle.

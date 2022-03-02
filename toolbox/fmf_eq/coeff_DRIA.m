@@ -1,6 +1,7 @@
 function [cp, ctau, cd, cl] = coeff_DRIA(param_eq, delta)
 % Calculates aerodynamic coefficients for a flat plate using DRIA (Diffuse
-% Reflection with Incomplete Accommodation) 
+% Reflection with Incomplete Accommodation)
+% [Doornbos E (2012) Thermospheric Density and Wind Determination from Satellite Dynamics]
 %
 % Inputs:
 %       param_eq.alpha  : Accomodation coefficient
@@ -38,48 +39,47 @@ function [cp, ctau, cd, cl] = coeff_DRIA(param_eq, delta)
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE -------------
 
-[data] = astrophysicalConstants;
+[data] = ADBSatConstants;
 
-%Tinf = param_eq.Tinf;
-Vinf = param_eq.V;
+Tinf = param_eq.Tinf;
+Vinf = param_eq.vinf;
 alpha = param_eq.alpha;
-s = param_eq.s;
+%s = param_eq.s;
 Tw = param_eq.Tw;
-rho = param_eq.rho;
+%mmean = param_eq.mmean;
+massConc = param_eq.massConc;
 
-rhoHe = rho(1);
-rhoO = rho(2);
-rhoN2 = rho(3);
-rhoO2 = rho(4);
-rhoAr = rho(5);
-%rhoTot = rho(6);
-rhoH = rho(7);
-rhoN = rho(8);
-%rhoAnO = rho(9);
+m = [data.constants.mHe, data.constants.mO, data.constants.mN2,...
+    data.constants.mO2, data.constants.mAr, data.constants.mH,...
+    data.constants.mN, data.constants.mAnO];
 
-% Calculate mean molecular mass
-Mmean = (data.constants.mHe*rhoHe + data.constants.mO*rhoO +...
-    data.constants.mN2*rhoN2 + data.constants.mO2*rhoO2 +...
-    data.constants.mAr*rhoAr + data.constants.mH*rhoH +...
-    data.constants.mN*rhoN)./...
-    (rhoHe + rhoO + rhoN2 + rhoO2 + rhoAr + rhoH + rhoN); % [g mol^-1]
+gam = param_eq.gamma; %cos(delta);
+ell = param_eq.ell; %sin(delta);
 
-%T_ki = ((Mmean*1e-3)/data.constants.NA * Vinf^2)/(3*data.constants.kb); % Incoming kinetic temperature [K]
-%T_kr  = T_ki*(1-alpha) + alpha*Tw; % Reflected kinetic temperature [K]
-%V_r = Vinf * sqrt(2/3) * sqrt(1 + alpha*(Tw/T_ki - 1)); % Reflected particle velocity
-
-% [Doornbos E (2012) Thermospheric Density and Wind Determination from Satellite Dynamics]
-P = exp(-cos(delta).^2 * s.^2)./s;
-G = 1/(2*s.^2);
-Q = 1+G;
-Z = 1+erf(cos(delta).*s);
-R = data.constants.R/Mmean * 1e3;
-Vratio = sqrt((1/2)*(1+alpha.*((4*R*Tw)./Vinf.^2 - 1))); % [Doornbos 2012]
-
-cd = P./sqrt(pi) + cos(delta).*Q.*Z + 0.5*cos(delta).*Vratio.*(cos(delta).*sqrt(pi).*Z+P);
-cl = sin(delta).*G.*Z + 0.5*sin(delta).*Vratio.*(cos(delta).*sqrt(pi).*Z+P);
+for j = 1:length(massConc) % Species specific (by mass concentration)
+    s(j) = Vinf./sqrt(2*(data.constants.kb/(m(j)/data.constants.NA/1000)*Tinf));
+    P = exp(-gam.^2 * s(j).^2)./s(j);
+    G = 1/(2*s(j).^2);
+    Q = 1+G;
+    Z = 1+erf(gam.*s(j));
+    R = data.constants.R/m(j) * 1e3; % Specifc gas constant
+    Vratio = sqrt((1/2)*(1+alpha.*((4*R*Tw)./Vinf.^2 - 1))); % [Doornbos 2012]
+    cd_j(:,j) = P./sqrt(pi) + gam.*Q.*Z + (0.5*gam).*Vratio.*(gam.*sqrt(pi).*Z + P);
+    cl_j(:,j) = ell.*G.*Z + (0.5*ell).*Vratio.*(gam.*sqrt(pi).*Z + P);
+end
+s_av = sum(s.*repmat(massConc,[size(s,1),1]),2)'; % Species weighted average speed ratio
+%
+cd = sum(cd_j.*repmat(massConc,[size(cd_j,1),1]),2)';
+cl = sum(cl_j.*repmat(massConc,[size(cd_j,1),1]),2)';
 
 cp   = cd.*cos(delta) + cl.*sin(delta);
 ctau = cd.*sin(delta) - cl.*cos(delta);
 
 %------------- END OF CODE --------------
+
+% Mehta DRIA Flat Plate
+% T_ki = ((mmean*1e-3/data.constants.NA) * Vinf^2)/(3*data.constants.kb); % Incoming kinetic temperature [K]
+% T_kr  = T_ki*(1-alpha) + alpha*Tw; % Reflected kinetic temperature [K]
+% V_r = Vinf * sqrt(2/3) * sqrt(1 + alpha*(Tw/T_ki - 1)); % Reflected particle velocity
+% cd_m = (2 + 1/s.^2).*erf(s) + (2/(sqrt(pi)*s))*exp(-s.^2) + (sqrt(pi)/s)*sqrt(T_kr/Tinf);
+% cl_m = 0;

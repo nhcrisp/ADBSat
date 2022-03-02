@@ -42,7 +42,7 @@ M = zeros(0,1);
 vertex_index = 1;
 face_index = 1;
 mat_id = 0;
-fid = fopen(fileIn,'rt');
+fid = fopen(fileIn,'r');
 line = fgets(fid);
 
 while ischar(line)
