@@ -45,9 +45,13 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 % Constants
 [data] = ADBSatConstants;
 
+M_j = [data.constants.mHe, data.constants.mO, data.constants.mN2,...
+    data.constants.mO2, data.constants.mH, data.constants.mN]; % Molecular mass of {He, O, N2, O2, H, N} [g/mol]
+
 alphaN = param_eq.alphaN;
 sigmaT = param_eq.sigmaT;
-s = param_eq.s;
+%s = param_eq.s;
+Vinf = param_eq.vinf;
 Tw = param_eq.Tw;
 Tinf = param_eq.Tinf;
 rho = param_eq.rho;
@@ -70,24 +74,24 @@ m_j = zeros(length(rho),1);
 xi_j = zeros(length(rho),1);
 
 for i = 1: length(rho)
-    
+    s(i) = Vinf./sqrt(2*(data.constants.kb/(M_j(i)/data.constants.NA/1000)*Tinf));
     % compute fitted parameters for the species considered [ref: Walker et al. (2014)]
     [beta_fp, gamma_fp, delta_fp, zeta_fp] = Fitted_Parameters(i, alphaN);
     % define aux functions
-    x_var = s.*cos(delta);
+    x_var = s(i).*cos(delta);
     gamma1 = 1/sqrt(pi).*(x_var.*exp(-x_var.^2) + sqrt(pi)/2*(1+2*x_var.^2).*(1+erf(x_var)));
     gamma2 = 1/sqrt(pi).*(exp(-x_var.^2) + sqrt(pi).*x_var.*(1+erf(x_var)));
     % compute normal and shear stress coefficients [ref: Mostaza-Prieto PhD Thesis 2017]
     if alphaN < 1
-        cp_j(i,:) = (1/s^2).*((1+sqrt(1-alphaN)).*gamma1 +...
-            0.5*(exp(-beta_fp.*(1-alphaN).^gamma_fp).*(Tw/Tinf).^delta_fp.*(zeta_fp./s)).*...
+        cp_j(i,:) = (1/s(i)^2).*((1+sqrt(1-alphaN)).*gamma1 +...
+            0.5*(exp(-beta_fp.*(1-alphaN).^gamma_fp).*(Tw/Tinf).^delta_fp.*(zeta_fp./s(i))).*...
             sqrt(Tw/Tinf)*sqrt(pi).*gamma2);
-        ctau_j(i,:) = (sigmaT.*sin(delta))./s.*gamma2;
+        ctau_j(i,:) = (sigmaT.*sin(delta))./s(i).*gamma2;
     else % sigmaN = alphaN [ref: Walker et al. (2014)]
-        cp_j(i,:) = 1/s^2.*(((2-alphaN).*s/sqrt(pi).*cos(delta)+alphaN/2*(Tw/Tinf)^0.5).*exp(-s^2.*(cos(delta)).^2)+...
-            ((2-alphaN).*(0.5+s^2.*(cos(delta)).^2)+alphaN/2.*(Tw/Tinf)^0.5.*sqrt(pi).*s.*cos(delta)).*(1+erf(s.*cos(delta))));
+        cp_j(i,:) = 1/s(i)^2.*(((2-alphaN).*s(i)/sqrt(pi).*cos(delta)+alphaN/2*(Tw/Tinf)^0.5).*exp(-s(i)^2.*(cos(delta)).^2)+...
+            ((2-alphaN).*(0.5+s(i)^2.*(cos(delta)).^2)+alphaN/2.*(Tw/Tinf)^0.5.*sqrt(pi).*s(i).*cos(delta)).*(1+erf(s(i).*cos(delta))));
         
-        ctau_j(i,:) = sigmaT.*sin(delta)/(s*sqrt(pi)).*(exp(-s^2.*(cos(delta)).^2)+ s.*sqrt(pi).*cos(delta).*(1+erf(s.*cos(delta))));
+        ctau_j(i,:) = sigmaT.*sin(delta)/(s(i)*sqrt(pi)).*(exp(-s(i)^2.*(cos(delta)).^2)+ s(i).*sqrt(pi).*cos(delta).*(1+erf(s(i).*cos(delta))));
     end
     
     % compute drag coefficient:
@@ -101,8 +105,6 @@ end
 % The total aerodynamic coefficients are computed as the weighted sum of the aerodynamic
 % coefficients for each molecular species (O2, N2, O, N, He, H) present in the gas
 % mixture [ref: Walker et al]
-
-M_j = [4.002602, 15.999, 14.0067*2, 15.999*2, 1.00784, 14.0067]; % Molecular mass of {He, O, N2, O2, H, N} [g/mol]
 
 m_avg = 0;
 sum_ctau = 0;

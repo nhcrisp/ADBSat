@@ -39,12 +39,15 @@ ADBSat may therefore lose accuracy when:
 ├── examples                                    #Directory containing the example cube case.
 |     ├── ADBSatMain.m                          #Sample input file. Produces aerodynamic analysis of a cube at an AOA=0deg and AOS=10deg.
 |     ├── MainImport.m                          #Import of the example cube object from a .obj to a .mat file.
-|     └── run_cube.m                            #Runs the whole cube example, from import to final aerodynamic database output.
+|     ├── run_cube.m                            #Runs the whole cube example, from import to final aerodynamic database output.
+|     └── run_plate.m                           #Runs the whole plate example, from import to final aerodynamic database output.
 ├── inou                                        #Directory containing the model inputs from the program.
 |     ├── obj_files                             #Directory containing .obj satellite models (CAD inputs to ADBSat).
-|     |     └── cube.obj                        #CAD model of a cube used in the sample case.
+|     |     ├── cube.obj                        #CAD model of a cube used in the sample case.
+|     |     └── plate.obj                        #CAD model of a plate used in the sample case.
 |     └── stl_files                             #Directory containing .stl satellite models (alternative CAD inputs to ADBSat).
-|           └── cube.STL                        #CAD model of a cube used in the sample case (alternative).
+|           ├── cube.STL                        #CAD model of a cube used in the sample case (alternative).
+|           └── plate.STL                        #CAD model of a plate used in the sample case (alternative).
 ├── install                                     #Directory containing the installation files
 |     ├── ADBSat_dynpath.m                      #Creates the path to the ADBSat base folder
 |     └── ADBSat_install.m                      #Installs ADBSat and adds necessary paths to toolbox.
