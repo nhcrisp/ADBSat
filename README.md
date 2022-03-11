@@ -14,7 +14,7 @@ ADBSat features a basic shadowing analysis to identify panels that are shielded 
 
 ADBSat may therefore lose accuracy when:
 - Parts of the geometry shadow others from the oncoming flow. 
-- Secondary and multiple reflections between surface elements are expected to occur (this it may not be suitable for the analysis of concave bodies).
+- Secondary and multiple reflections between surface elements are expected to occur (thus it may not be suitable for the analysis of concave bodies).
 - When the flow has a very low molecular speed ratio (hypothermal flow conditions) such that the oncoming flow may experience significant interactions with backwards facing surfaces.
 
 ## Installation
@@ -24,7 +24,7 @@ ADBSat may therefore lose accuracy when:
 
 ## Dependencies
 - MATLAB 
-- Aerospace Toolbox
+- Aerospace Toolbox (for computation of environmental parameters if not supplied by the user)
 - meshlabserver (if automated conversion from .stl to .obj files is required)
 
 ## Usage
@@ -89,4 +89,12 @@ ADBSat may therefore lose accuracy when:
 
 ## References
 
-D. Mostaza-Prieto, Characterisation and Applications of Aerodynamic Torques on Satellites (PhD Thesis), The University of Manchester, 2017.
+Sinpetru, L. A., Crisp, N. H., Mostaza-Prieto, D., Livadiotti, S., and Roberts, P. C. E. “ADBSat: Methodology of a Novel Panel Method Tool for Aerodynamic Analysis of Satellites.” Computer Physics Communications, Vol. 275, 2022, p. 108326. <https://doi.org/10.1016/j.cpc.2022.108326>.
+
+Sinpetru, L. A., Crisp, N. H., Roberts, P. C. E., Sulliotti-Linner, V., Hanessian, V., Herdrich, G. H., Romano, F., Garcia-Almiñana, D., Rodríguez-Donaire, S., and Seminari, S. “ADBSat: Verification and Validation of a Novel Panel Method for Quick Aerodynamic Analysis of Satellites.” Computer Physics Communications, Vol. 275, 2022, p. 108327. <https://doi.org/10.1016/j.cpc.2022.108327>.
+
+Mostaza-Prieto, D., Characterisation and Applications of Aerodynamic Torques on Satellites (PhD Thesis), The University of Manchester, 2017.
+
+## Licence
+
+This project is licensed under the GPL-3.0 License - see the LICENSE file for details.
