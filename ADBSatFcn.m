@@ -1,8 +1,9 @@
-function [ pathOut ] = ADBSatFcn( modpath, respath, param_eq, aoa_deg, aos_deg, flag_shadow, flag_solar, env, del, verb )
+function [ pathOut ] = ADBSatFcn( modPath, resPath, param_eq, aoa_deg, aos_deg, flag_shadow, flag_solar, env, del, verb )
 %ADBSATFCN Creates a .mat file(s) in "/inou/results" with the following fields:
 %
 % Inputs:
-%       modname : name of the input model file (.mat) in /inou/models
+%       modPath : path of the input model file (.mat)
+%       resPath : path of output file (without .ext)
 %       param_eq : GSI & SRP parameter structure inputs (dependent on GSI model)
 %           gsi_model   : GSI Model (string)
 %           alpha       : Energy accommodation coefficient (Cook/Sentman/Maxwell)
@@ -99,6 +100,6 @@ end
 % Calculate Interactions
 aoa = aoa_deg*pi/180; % Angle(s) of attack [rad]
 aos = aos_deg*pi/180; % Angle(s) of sideslip [rad]
-pathOut = calc_coeff(modpath, respath, aoa, aos, param_eq, flag_shadow, flag_solar, del, verb);
+pathOut = calc_coeff(modPath, resPath, aoa, aos, param_eq, flag_shadow, flag_solar, del, verb);
 
 %------------- END OF CODE --------------

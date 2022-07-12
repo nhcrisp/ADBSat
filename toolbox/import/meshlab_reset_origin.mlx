@@ -1,4 +1,3 @@
-<!DOCTYPE FilterScript>
 <FilterScript>
  <filter name="Transform: Translate, Center, set Origin">
   <Param value="1" enum_val1="Center on BBox" type="RichEnum" description="Transformation:" name="traslMethod" enum_val0="XYZ translation" enum_cardinality="3" enum_val2="Set new Origin" tooltip="[XYZ translation] adds X,Y and Z offset to Layer transformation, [Center on BBox] moves Layer Origin to the Bounding Box center, [Set new Origin] moves Layer Origin to a specific point"/>

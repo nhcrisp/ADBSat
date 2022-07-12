@@ -103,7 +103,7 @@ for i=1:length(indFPot)
 
                 else
                  
-                 if any((barCw(1,indB(indBPot((yC_chang(zC_chang(Ftest))))))-barCw(1,indF(indFPot(i))))> tolB);
+                 if any((barCw(1,indB(indBPot((yC_chang(zC_chang(Ftest))))))-barCw(1,indF(indFPot(i))))> tolB)
                     shadPan(indF(indFPot(i))) = 1;
                  end
                  

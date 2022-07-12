@@ -32,9 +32,9 @@
 %           Cf_w     : Body force coefficient in wind axes (3x1)
 %           Cf_f     : Body force coefficient in flight axes (3x1)
 %           Cm_B     : Body moment coefficient in body axes (3x1)
-%           Aref     : Reference area used in calculations [m^2]
+%           AreaRef  : Reference area used in calculations [m^2]
 %           AreaProj : Projected area to the flow [m^2]
-%           Lref     : Refrence length used for calcualtions [m]
+%           LenRef   : Refrence length used for calcualtions [m]
 %           param_eq : Structure containing input GSI parameters
 %
 % where N = number of faces.
@@ -75,7 +75,7 @@ z = meshdata.ZData;
 areas = meshdata.Areas;
 surfN = meshdata.SurfN;
 barC = meshdata.BariC;
-Lref = meshdata.Lref;
+LenRef = meshdata.Lref;
 matID = meshdata.MatID;
 
 indexAoA = length(aoaS);
@@ -99,7 +99,7 @@ end
 
 % Values to save in output
 var_out = {'aoa';'aos';'tauDir';'delta';'cp';'ctau';'cd';'cl';...
-    'Cf_w';'Cf_f';'Cm_B';'Aref';'AreaProj';'Lref';'param_eq';'shadow'};
+    'Cf_w';'Cf_f';'Cm_B';'AreaRef';'AreaProj';'LenRef';'param_eq';'shadow'};
 if flag_sol
     var_out = [var_out;{'Cf_s';'Cm_S'}];
 end
@@ -110,7 +110,7 @@ for ii = 1:indexAoA
         aoa = aoaS(ii);
         aos = aosS(jj);
         
-        %L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+        %L_wb = dcmbody2wind(aoa, aos); % Body to Wind (Aerospace Toolbox)
         L_wb = [cos(aos)*cos(aoa), sin(aos), sin(aoa)*cos(aos);...
             -sin(aos)*cos(aoa), cos(aos), -sin(aoa)*sin(aos);...
             -sin(aoa), 0, cos(aoa)]; % Body to Wind
@@ -172,7 +172,7 @@ for ii = 1:indexAoA
         % Areas
         AreaProj = areaB*cos(delta)'; % Projected
         AreaT = sum(areas); % Total
-        Aref = AreaT/2; % ADBSat Reference
+        AreaRef = AreaT/2; % ADBSat Reference
         
         % Shear direction
         tauDir = cross(surfN,cross(vMatrix,surfN)); % direction of the shear coefficient
@@ -183,23 +183,23 @@ for ii = 1:indexAoA
         tauDir(:,TF) = 0;
         
         % Force coefficeints
-        Cf_g = 1/(Aref).*(tauDir*(ctau'.*areas') - surfN*(cp'.*areas'));
+        Cf_g = 1/(AreaRef).*(tauDir*(ctau'.*areas') - surfN*(cp'.*areas'));
         Cf_w = L_gw' * Cf_g;
         Cf_f = L_fb * L_gb' * Cf_g;
         
         % Moment coefficients
-        Cmom_G = 1/(Aref*Lref).*(cross(barC,tauDir)*(ctau'.*areas') +...
+        Cmom_G = 1/(AreaRef*LenRef).*(cross(barC,tauDir)*(ctau'.*areas') +...
             cross(barC,-surfN)*(cp'.*areas'));
-        %Cmom_G_b = sum((1/(Aref*Lref).*(cross(barC, (tauDir.*(ctau.*areas) - surfN.*(cp.*areas))))),2);
+        %Cmom_G_b = sum((1/(AreaRef*LenRef).*(cross(barC, (tauDir.*(ctau.*areas) - surfN.*(cp.*areas))))),2);
         Cm_B = L_gb' * Cmom_G;
         
         % Solar coefficients
         if flag_sol
             cstau = cs.*sin(delta); % resolve incident to shear
             cs_n = cs.*cos(delta); % resolve incident to normal
-            Cs_G = 1/(Aref).*(tauDir*(cstau'.*areas') - surfN*((cn+cs_n)'.*areas'));
+            Cs_G = 1/(AreaRef).*(tauDir*(cstau'.*areas') - surfN*((cn+cs_n)'.*areas'));
             Cf_s = L_gw'*Cs_G;
-            Cms_G = 1/(Aref*Lref).*(cross(barC,tauDir)*(cstau'.*areas') +...
+            Cms_G = 1/(AreaRef*LenRef).*(cross(barC,tauDir)*(cstau'.*areas') +...
                 cross(barC,-surfN)*((cn+cs_n)'.*areas'));
             Cm_S = L_gb'*Cms_G;
         end

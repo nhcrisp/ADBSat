@@ -41,6 +41,9 @@ quiver3(barC(1,:),barC(2,:),barC(3,:),surfN(1,:),surfN(2,:),surfN(3,:))
 hold on
 
 patch(x, y, z, matID);
+xlabel('X')
+ylabel('Y')
+zlabel('Z')
 
 axis equal
 

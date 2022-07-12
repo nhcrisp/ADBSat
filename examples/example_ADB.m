@@ -1,7 +1,11 @@
-% Cube Example
+%EXAMPLE_ADB
+%
+% Author: Nicholas Crisp
+% The University of Manchester
+% November 2022
 %
 %--- Copyright notice ---%
-% Copyright (C) 2021 The University of Manchester
+% Copyright (C) 2022 The University of Manchester
 % Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
 %
 % This file is part of the ADBSat toolkit.
@@ -18,28 +22,28 @@
 %
 % You should have received a copy of the GNU General Public License along
 % with this program. If not, see <http://www.gnu.org/licenses/>.
-%------------ BEGIN CODE ----------%
+%------------- BEGIN CODE --------------
 
 clear
 
-modName = 'plate';
+modName = 'cube';
 % Path to model file
 ADBSat_path = ADBSat_dynpath;
 modIn = fullfile(ADBSat_path,'inou','obj_files',[modName,'.obj']);
 modOut = fullfile(ADBSat_path,'inou','models');
-resOut = fullfile(ADBSat_path,'inou','results',modName);
+resOut = fullfile(ADBSat_path,'inou','results');
 
 %Input conditions
 alt = 200; %km
 inc = 51.6; %deg
 env = [alt*1e3, inc/2, 0, 106, 0, 65, 65, ones(1,7)*3, 0]; % Environment variables
 
-aoa = 45; % Angle of attack
-aos = 0; % Angle of sideslip
+aoa = -45:5:45; % Angle of attack
+aos = -45:5:45; % Angle of sideslip
 
 % Model parameters
 shadow = 1;
-inparam.gsi_model = 'sentman';
+inparam.gsi_model = 'cook';
 inparam.alpha = 1; % Accommodation (altitude dependent)
 inparam.Tw = 300; % Wall Temperature [K]
 
@@ -47,20 +51,23 @@ solar = 1;
 inparam.sol_cR = 0.15; % Specular Reflectivity
 inparam.sol_cD = 0.25; % Diffuse Reflectivity
 
-verb = 1;
-del = 0;
+verb = 0; % Verbose
+del = 1; % Delete temp
 
 % Import model
-[modOut] = ADBSatImport(modIn, modOut, verb);
-
-% Environment Calculations
-inparam = environment(inparam, env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14),env(15));
+modOut = ADBSatImport(modIn, modOut, verb);
 
 % Coefficient Calculation
-fileOut = calc_coeff(modOut, resOut, aoa, aos, inparam, shadow, solar, 1, 0); 
+pathOut = ADBSatFcn( modOut, resOut, inparam, aoa, aos, shadow, solar, env, del, verb );
 
 % Plot surface distribution
-if verb && ~del
-    plot_surfq(fileOut, modOut, aoa(1), aos(1), 'cp');
-end
+figure
+load(pathOut,'aedb')
+contourf((aedb.aos).*(180/pi), aedb.aoa.*(180/pi), aedb.aero.Cf_wX)
+colorbar
+xlabel('Angle of Sideslip')
+ylabel('Angle of Attack')
+title('Drag Force Coefficient')
+
 %------------ END CODE -----------%
+

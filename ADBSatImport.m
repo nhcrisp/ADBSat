@@ -1,5 +1,5 @@
-function [ pathSav ] = ADBSatImport( modIn, pathOut, verb )
-%ADBSATIMPORT Creates a file .mat in "/inou/models" containing a structure with the following fields
+function [ matOut ] = ADBSatImport( modIn, pathOut, verb )
+%ADBSATIMPORT Creates a file .mat containing a structure with the following fields
 %     XData     : 3xN matrix X coordinates of the vertices (triangular)
 %     YData     : 3xN matrix Y coordinates of the vertices (triangular)
 %     ZData     : 3xN matrix Z coordinates of the vertices (triangular)
@@ -13,8 +13,7 @@ function [ pathSav ] = ADBSatImport( modIn, pathOut, verb )
 %       verb    : Verbose flag
 %
 % Outputs:
-%       modName : Name of the output model
-%       pathSav : Full path to the output file   
+%       matOut : Full path to the output MAT file   
 %
 % Author: David Mostaza-Prieto
 % The University of Manchester
@@ -44,7 +43,7 @@ function [ pathSav ] = ADBSatImport( modIn, pathOut, verb )
 
 % Create .obj file from .stl if required (using meshlabserver)
 if strcmpi(ext,'.stl')
-    [err] = stl2obj(modName);
+    [err] = stl2obj(modIn);
     if ~err
         objname = [modName,'.obj'];
     end
@@ -54,8 +53,8 @@ end
 
 objpath = fullfile(modPath,objname); % Input:
 
-pathSav = importobjtri(objpath, pathOut, modName, verb);
+matOut = importobjtri(objpath, pathOut, modName, verb);
 
 if verb
-    plotNormals(pathSav); % Plots the surface mesh with the normals
+    plotNormals(matOut); % Plots the surface mesh with the normals
 end

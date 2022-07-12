@@ -1,11 +1,11 @@
-function h = plot_surfq(fileIn, modIn, aoa, aos, param)
+function h = plot_surfq(fileIn, modIn, aoa_deg, aos_deg, param)
 % Plots the surface mesh with color proportional to the chosen parameter
 %
 % Inputs:
 %    file_name  : Name of the file containing the results (fiName_eqmodel)
 %    folderpath : Folder containig the file
-%    aoa        : Angle of attack [rad]
-%    aos        : Angle of sideslip [rad]
+%    aoa_deg    : Angle of attack [deg]
+%    aos_deg    : Angle of sideslip [deg]
 %    param      : Surface parameter to plot (cp, ctau, cd, cl)
 %
 % Outputs:
@@ -45,20 +45,25 @@ z = meshdata.ZData;
 % Load results for indicated aoa, aos
 s = load(fileIn);
 if isfield(s, 'aedb')
-    % Locate correct individual adbsat output file
-    [pathstr, name, ~] = fileparts(fileIn);
-    try
-        s = load(fullfile(pathstr,name,[modName,'_a',mat2str(aoa*180/pi),'s',mat2str(aos*180/pi),'.mat']));
-    catch
-    end
+    disp('Please select a single ADBSat output .mat file')
 end
 
-L_wb = dcmbody2wind(aoa, aos); % Body to Wind
+aoa = aoa_deg*(pi/180);
+aos = aos_deg*(pi/180);
+
+%L_wb = dcmbody2wind(aoa, aos); % Body to Wind (Aerospace Toolbox)
+L_wb = [cos(aos)*cos(aoa), sin(aos), sin(aoa)*cos(aos);...
+    -sin(aos)*cos(aoa), cos(aos), -sin(aoa)*sin(aos);...
+    -sin(aoa), 0, cos(aoa)]; % Body to Wind
+
 L_gb = [1 0 0; 0 -1 0; 0 0 -1]; % Body to Geometric
 L_gw = L_gb*L_wb'; % Wind to Geometric
 L_fb = [-1 0 0; 0 1 0; 0 0 -1]; % Body to Flight
 
-axlength = 0.7*s.Lref;
+ax_F = -L_fb * L_gb';
+ax_W = -L_gw';
+
+axlength = max([max(max(x))-min(min(x)), max(max(y))-min(min(y)), max(max(z))-min(min(z))]);
 
 % Reference Point
 x0 = [0;0;0]; y0 = [0;0;0]; z0 = [0;0;0];
@@ -66,25 +71,26 @@ x0 = [0;0;0]; y0 = [0;0;0]; z0 = [0;0;0];
 hFig = figure;
 hold on
 %Wind
-W = quiver3(x0,y0,z0,L_gw(:,1),L_gw(:,2),L_gw(:,3),axlength, 'b');
-%quiver3(0,0,0,L_gw(1,1),L_gw(1,2),L_gw(1,3),axlength, 'b', 'LineWidth',2)
+%W = quiver3(x0,y0,z0,L_gw(:,1),L_gw(:,2),L_gw(:,3),axlength, 'b');
+W = quiver3(0,0,0,ax_W(1,1),ax_W(1,2),ax_W(1,3),axlength, 'b', 'LineWidth',2);
 % Body
 B = quiver3(x0,y0,z0,L_gb(:,1),L_gb(:,2),L_gb(:,3),axlength,'r');
 %quiver3(0,0,0,L_gb(1,1),L_gb(1,2),L_gb(1,3),axlength, 'r', 'LineWidth',2)
 % Geometric
 G = quiver3(x0,y0,z0,[1;0;0],[0;1;0],[0;0;1],axlength,'g');
 % Flight
-F = quiver3(x0,y0,z0,L_fb(:,1),L_fb(:,2),L_fb(:,3),axlength,'k');
+%F = quiver3(x0,y0,z0,L_fb(:,1),L_fb(:,2),L_fb(:,3),axlength,'k');
+F = quiver3(0,0,0,ax_F(1,1),ax_F(1,2),ax_F(1,3),axlength,'k','LineWidth',2);
 axis equal
 grid on
 
 h = patch(x, y, z, s.(param));
 colorbar
-legend([W,B,G,F],'Wind','Body','Geometric','Flight','Location','NorthWest')
+legend([W,F,B,G],'Wind Vector','Flight Vector','Body Axes','Geometric Axes','Location','NorthWest')
 % set(h,'EdgeAlpha',0)
-string1 = strcat(s.(param),' surface distribution');
-string2 = strcat('AoA: ',mat2str(aoa*180/pi),' deg,  AoS: ', mat2str(aos*180/pi), ' deg');
-xlabel('x'); ylabel('y'); zlabel('z')
+string1 = strcat(param,' Surface Distribution');
+string2 = strcat('AoA: ',mat2str(aoa_deg),' deg,  AoS: ', mat2str(aos_deg), ' deg');
+xlabel('X'); ylabel('Y'); zlabel('Z')
 title(char(string1,string2))
 
 axis equal
@@ -95,12 +101,12 @@ set(dcm,'UpdateFcn',{@myupdatefcn,s.(param),param});
 end
 
 function txt = myupdatefcn(~,evt,data,name)
-    pos = get(evt,'Position');
-    ind = ceil(get(evt, 'DataIndex')/3);
-    txt = { sprintf('(x,y,z): (%g, %g, %g)', pos(1:3)),...
-            sprintf('index: %g', ind),...
-            sprintf('%s value: %g', name, data(ind))
-          };
+pos = get(evt,'Position');
+ind = ceil(get(evt, 'DataIndex')/3);
+txt = { sprintf('(x,y,z): (%g, %g, %g)', pos(1:3)),...
+    sprintf('index: %g', ind),...
+    sprintf('%s value: %g', name, data(ind))
+    };
 end
 
 %------------- END OF CODE --------------

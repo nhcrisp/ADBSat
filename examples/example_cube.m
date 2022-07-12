@@ -27,19 +27,19 @@ modName = 'cube';
 ADBSat_path = ADBSat_dynpath;
 modIn = fullfile(ADBSat_path,'inou','obj_files',[modName,'.obj']);
 modOut = fullfile(ADBSat_path,'inou','models');
-resOut = fullfile(ADBSat_path,'inou','results');
+resOut = fullfile(ADBSat_path,'inou','results',modName);
 
 %Input conditions
 alt = 200; %km
 inc = 51.6; %deg
 env = [alt*1e3, inc/2, 0, 106, 0, 65, 65, ones(1,7)*3, 0]; % Environment variables
 
-aoa = [0 45]; % Angle of attack
-aos = [0 45]; % Angle of sideslip
+aoa = 0; % Angle of attack
+aos = 0; % Angle of sideslip
 
 % Model parameters
 shadow = 1;
-inparam.gsi_model = 'sentman';
+inparam.gsi_model = 'cook';
 inparam.alpha = 1; % Accommodation (altitude dependent)
 inparam.Tw = 300; % Wall Temperature [K]
 
@@ -53,11 +53,14 @@ del = 0;
 % Import model
 [modOut] = ADBSatImport(modIn, modOut, verb);
 
-% Calculate
-[ADBout] = ADBSatFcn(modOut, resOut, inparam, aoa, aos, shadow, solar, env, del, verb);
+% Environment Calculations
+inparam = environment(inparam, env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14),env(15));
 
-% Plot
+% Coefficient Calculation
+fileOut = calc_coeff(modOut, resOut, aoa, aos, inparam, shadow, solar, 1, 0); 
+
+% Plot surface distribution
 if verb && ~del
-    plot_surfq(ADBout, modOut, aoa(1), aos(1), 'cp');
+    plot_surfq(fileOut, modOut, aoa(1), aos(1), 'cp');
 end
 %------------ END CODE -----------%

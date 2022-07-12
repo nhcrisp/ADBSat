@@ -28,20 +28,29 @@
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %----------- BEGIN CODE ------------%
 
+ADBSat_path = ADBSat_dynpath;
+
 filename   = 'cube.obj'; % Input: Name of the file in /inou/obj_files
 
-[~,name,ext] = fileparts(filename);
+modIn = fullfile(ADBSat_path,'inou','obj_files',filename);
+[modPath,modName,ext] = fileparts(filename);
 
+% Create .obj file from .stl if required (using meshlabserver)
 if strcmpi(ext,'.stl')
-    [status] = stl2obj(name);
-    filename = [name,'.obj'];
+    [err] = stl2obj(modIn);
+    if ~err
+        objname = [modName,'.obj'];
+    end
+else
+    objname = [modName,'.obj'];
 end
 
-objname = filename; % Input: Name of the "obj" file in /inou/obj_files
-[~,name,~] = fileparts(filename);
-struName = name;     % Output: Name of the matlab file mesh in /inou/models
+objpath = fullfile(modPath,objname);
 
-importobjtri(filename,struName)
+pathOut = fullfile(ADBSat_path,'inou','models');
 
-h = plotNormals(struName); % Plots the surface mesh with the normals
+matOut = importobjtri(modIn, pathOut, modName, verb);
+
+plotNormals(matOut); % Plots the surface mesh with the normals
+
 %------------END CODE------------%

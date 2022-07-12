@@ -1,8 +1,8 @@
-function [err] = stl2obj(filename)
+function [err] = stl2obj(modIn)
 %STL2OBJ converts a .STL file to a .OBJ file using meshlabserver
 %
 % Inputs:
-%   filename: mesh filename
+%   modIn: path and filename of STL mesh
 %
 % Outputs:
 %   status  : error flag [1/0]
@@ -33,16 +33,18 @@ function [err] = stl2obj(filename)
 
 [ADBSat_path] = ADBSat_dynpath;
 
-filein = fullfile(ADBSat_path,'inou','stl_files',[filename,'.stl']);
-fileout = fullfile(ADBSat_path,'inou','obj_files',[filename,'.obj']);
+[modPath,modName,ext] = fileparts(modIn);
+
+modOut = fullfile(modPath,[modName,'.obj']);
 
 script = fullfile(ADBSat_path,'toolbox','import','meshlab_reset_origin.mlx');
 
 % System Call
-[err] = system(['meshlabserver -i ', filein,' -o ', fileout, ' -s ', script]);
+[err] = system(['python ', script, ' ', modIn, ' ', modOut]);
+%[err] = system(['meshlabserver -i ', modIn,' -o ', modOut, ' -s ', script]);
 
 % Shell Escape
-%!meshlabserver -i fileout -o fileout -s meshlab_reset_origin.mlx
+%!meshlabserver -i modIn -o fileout -s meshlab_reset_origin.mlx
 
 if err ~= 0
     error('.OBJ file not correctly created. Check input file and that meshlabserver is available on the system PATH.')

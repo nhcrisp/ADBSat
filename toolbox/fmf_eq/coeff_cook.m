@@ -43,10 +43,16 @@ function [cp, ctau, cd, cl] = coeff_cook(param_eq, delta)
 
 alpha = param_eq.alpha;
 Tw = param_eq.Tw;
-Tinf = param_eq.Tinf;
+Rmean = param_eq.Rmean;
+Vinf = param_eq.vinf;
+Tinf = Vinf^2/(3*Rmean);
 
-cd = 2.*(1 + 2/3.*sqrt(1 + alpha .*(Tw/Tinf-1)).*cos(delta)).*cos(delta);
-cl = 4/3.*sqrt(1 + alpha .*(Tw/Tinf-1)).*sin(delta).*cos(delta);
+cd = 2*(1 + (2/3)*sqrt(1 + alpha.*(Tw/Tinf-1)).*cos(delta));
+cl = 4/3.*sqrt(1 + alpha.*(Tw/Tinf-1)).*sin(delta);
+
+ind = find(delta>=pi/2);
+cd(ind) = 0;
+cl(ind) = 0;
 
 cp   = cd.*cos(delta) + cl.*sin(delta);
 ctau = cd.*sin(delta) - cl.*cos(delta);

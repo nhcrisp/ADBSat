@@ -4,24 +4,23 @@ function fileOut = mergeAEDB(pathName, fiName, del)
 % input folder
 %
 % Inputs:
-%       pathName  : Path of the folder containing the multiple .mat files
-%       fiName    : Name of the model file
+%       pathName        : Path of the folder containing the multiple .mat files
+%       fiName          : Name of the model file
 %
-% Outputs:
-%       Produces one output file containing a structure with the following fields
-%           aoa     : Angles of attack (rad)
-%           aos     : Angles of sideslip (rad)
-%           Aref    : Reference area
-%           Lref    : Refrence length
-%           AreaProj: Projected areas
-%           aero
-%               Cf_w    : Aerodynamic force coeffients in wind axes [x,y,z] (aoa x aos)
-%               Cf_f    : Aerodynamic force coeffients in flight axes [x,y,z] (aoa x aos)
-%               Cm_B    : Aerodynamic moment coeffients in body axes [x,y,z](aoa x aos)
-%           solar
-%               C_s     : Total solar force coefficients in axes [x,y,z] (aoa x aos)
-%               C_sB    : Total solar moment coefficients in axes [x,y,z] (aoa x aos)
-%           param_eq: Structure containing input GSI parameters
+% Output: (produces one output file containing a structure with the following fields)
+%        aoa         : Angles of attack (rad)
+%        aos         : Angles of sideslip (rad)
+%        AreaRef     : Reference area
+%        LenRef      : Refrence length
+%        AreaProj    : Projected areas
+%        aero
+%            Cf_w    : Aerodynamic force coeffients in wind axes [x,y,z] (aoa x aos)
+%            Cf_f    : Aerodynamic force coeffients in flight axes [x,y,z] (aoa x aos)
+%            Cm_B    : Aerodynamic moment coeffients in body axes [x,y,z](aoa x aos)
+%        solar
+%            C_s     : Total solar force coefficients in axes [x,y,z] (aoa x aos)
+%            C_sB    : Total solar moment coefficients in axes [x,y,z] (aoa x aos)
+%        param_eq    : Structure containing input GSI parameters
 %
 % Author: David Mostaza-Prieto
 % The University of Manchester
@@ -74,8 +73,8 @@ for ii = 1:length(fis)
         load(fullfile(pathName,fis(ii).name));
         count = count+1;
         
-        Aref_old = Aref;
-        Lref_old = Lref;
+        AreaRef_old = AreaRef;
+        LenRef_old = LenRef;
         param_eq_old = param_eq;        
         
         v_aoa(count) = aoa;
@@ -93,7 +92,7 @@ for ii = 1:length(fis)
             v_Cm_S(:,count)  = NaN;
         end
         
-        if ~isequal(param_eq, param_eq_old) || ~isequal(Aref, Aref_old) || ~isequal(Lref, Lref_old)
+        if ~isequal(param_eq, param_eq_old) || ~isequal(AreaRef, AreaRef_old) || ~isequal(LenRef, LenRef_old)
             warning('Change in input model or GSI paramaters detected...')
             check_input = 0;
         end
@@ -132,8 +131,8 @@ aedb.solar.Cm_sBY = reshape(v_Cm_S(2,index), [n_aos n_aoa])';
 aedb.solar.Cm_sBZ = reshape(v_Cm_S(3,index), [n_aos n_aoa])';
 
 if check_input
-    aedb.Aref = Aref;
-    aedb.Lref = Lref;
+    aedb.AreaRef = AreaRef;
+    aedb.LenRef = LenRef;
     aedb.param_eq = param_eq;
 end
 
