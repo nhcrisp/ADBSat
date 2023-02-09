@@ -36,15 +36,31 @@ barC = meshdata.BariC;
 surfN = meshdata.SurfN;
 matID = meshdata.MatID;
 
-figure 
+mats = numel(unique(matID));
+map = lines(mats);
+
+figure('Name','ADBSat Mesh')
 quiver3(barC(1,:),barC(2,:),barC(3,:),surfN(1,:),surfN(2,:),surfN(3,:))
 hold on
-
 patch(x, y, z, matID);
 xlabel('X')
 ylabel('Y')
 zlabel('Z')
-
 axis equal
+axis vis3d
+
+figure('Name','ADBSat Material ID')
+colormap(map);
+P = patch(x, y, z, matID);
+P.FaceAlpha = 0.7;
+P.LineStyle = 'none';
+grid on;
+xlabel('X')
+ylabel('Y')
+zlabel('Z')
+cb = colorbar;
+set(cb,'Ticks',0:1:mats)
+axis equal
+axis vis3d
 
 %------------- END OF CODE --------------

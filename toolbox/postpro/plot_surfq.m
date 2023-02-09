@@ -2,8 +2,8 @@ function h = plot_surfq(fileIn, modIn, aoa_deg, aos_deg, param)
 % Plots the surface mesh with color proportional to the chosen parameter
 %
 % Inputs:
-%    file_name  : Name of the file containing the results (fiName_eqmodel)
-%    folderpath : Folder containig the file
+%    fileIn     : Name of the file containing the results (fiName_eqmodel)
+%    modIn      : Folder containig the file
 %    aoa_deg    : Angle of attack [deg]
 %    aos_deg    : Angle of sideslip [deg]
 %    param      : Surface parameter to plot (cp, ctau, cd, cl)
@@ -48,8 +48,9 @@ if isfield(s, 'aedb')
     disp('Please select a single ADBSat output .mat file')
 end
 
-aoa = aoa_deg*(pi/180);
-aos = aos_deg*(pi/180);
+% Convert to Radians
+aoa = deg2rad(aoa_deg);
+aos = deg2rad(aos_deg);
 
 %L_wb = dcmbody2wind(aoa, aos); % Body to Wind (Aerospace Toolbox)
 L_wb = [cos(aos)*cos(aoa), sin(aos), sin(aoa)*cos(aos);...
@@ -89,7 +90,7 @@ colorbar
 legend([W,F,B,G],'Wind Vector','Flight Vector','Body Axes','Geometric Axes','Location','NorthWest')
 % set(h,'EdgeAlpha',0)
 string1 = strcat(param,' Surface Distribution');
-string2 = strcat('AoA: ',mat2str(aoa_deg),' deg,  AoS: ', mat2str(aos_deg), ' deg');
+string2 = strcat('AoA: ',sprintf('%.2f',aoa_deg),' deg,  AoS: ', sprintf('%.2f',aos_deg), ' deg');
 xlabel('X'); ylabel('Y'); zlabel('Z')
 title(char(string1,string2))
 

@@ -34,8 +34,8 @@ alt = 200; %km
 inc = 51.6; %deg
 env = [alt*1e3, inc/2, 0, 106, 0, 65, 65, ones(1,7)*3, 0]; % Environment variables
 
-aoa = 0; % Angle of attack
-aos = 0; % Angle of sideslip
+aoa_deg = 0; % Angle of attack [deg]
+aos_deg = 0; % Angle of sideslip [deg]
 
 % Model parameters
 shadow = 1;
@@ -57,10 +57,10 @@ del = 0;
 inparam = environment(inparam, env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14),env(15));
 
 % Coefficient Calculation
-fileOut = calc_coeff(modOut, resOut, aoa, aos, inparam, shadow, solar, 1, 0); 
+fileOut = calc_coeff(modOut, resOut, deg2rad(aoa_deg), deg2rad(aos_deg), inparam, shadow, solar, 1, 0); 
 
 % Plot surface distribution
 if verb && ~del
-    plot_surfq(fileOut, modOut, aoa(1), aos(1), 'cp');
+    plot_surfq(fileOut, modOut, aoa_deg(1), aos_deg(1), 'cp');
 end
 %------------ END CODE -----------%

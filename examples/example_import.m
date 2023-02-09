@@ -1,5 +1,4 @@
 % Creates a file .mat in "/inou/models" containing a structure with the following fields:
-
 %     XData: 3xN matrix X coordinates of the vertices (triangular)
 %     YData: 3xN matrix Y coordinates of the vertices (triangular)
 %     ZData: 3xN matrix Z coordinates of the vertices (triangular)
@@ -30,7 +29,7 @@
 
 ADBSat_path = ADBSat_dynpath;
 
-filename   = 'cube.obj'; % Input: Name of the file in /inou/obj_files
+filename = 'cube.obj'; % Input: Name of the file in /inou/obj_files
 
 modIn = fullfile(ADBSat_path,'inou','obj_files',filename);
 [modPath,modName,ext] = fileparts(filename);

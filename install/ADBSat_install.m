@@ -43,8 +43,6 @@ elseif nargin > 0
     end
 end
 
-% Absolute path
-
 %Get full path to this file as a string
 currentpath = string(mfilename('fullpath'));
 %Find folder separators
@@ -57,8 +55,18 @@ if install % Install toolbox
     p = genpath(ADBSat_path);
     addpath(p)
     savepath
+    disp(['ADBSat_path = ', ADBSat_path])
     
-    disp(['ADBS_path = ', ADBSat_path])
+    % Create folders for examples
+    if not(isfolder([ADBSat_path,filesep,'inou',filesep,'stl_files']))
+        mkdir([ADBSat_path,filesep,'inou',filesep,'stl_files'])
+    end
+    if not(isfolder([ADBSat_path,filesep,'inou',filesep,'models']))
+        mkdir([ADBSat_path,filesep,'inou',filesep,'models'])
+    end
+    if not(isfolder([ADBSat_path,filesep,'inou',filesep,'results']))
+        mkdir([ADBSat_path,filesep,'inou',filesep,'results'])
+    end
     
     disp('ADBSat installed successfully')
   
