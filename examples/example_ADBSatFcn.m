@@ -1,4 +1,5 @@
 %EXAMPLE_ADB
+% Creates an example aerodynamic database (in AoA/AoS) using ADBSat
 %
 % Author: Nicholas Crisp
 % The University of Manchester
@@ -38,8 +39,8 @@ alt = 200; %km
 inc = 51.6; %deg
 env = [alt*1e3, inc/2, 0, 106, 0, 65, 65, ones(1,7)*3, 0]; % Environment variables
 
-aoa = -45:5:45; % Angle of attack
-aos = -45:5:45; % Angle of sideslip
+aoa = -45:1:45; % Angle of attack
+aos = -45:1:45; % Angle of sideslip
 
 % Model parameters
 shadow = 1;

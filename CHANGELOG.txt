@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 Always keep a [Unreleased] section at the top for tracking changes
 
+## [Unreleased]
+### Changed
+- File input and output structure changed to use user defined directories
+### Added
+- Diffuse Reemission, Incomplete Accommodation (DRIA) GSI model
+- Functionality to allow shadowed panels to be plotted onto model surface
+### Removed
+- meshlabserver command line STL to OBJ functionality depreciated in recent updates 
+### Fixed
+- Units of AoA and AoS in example scripts
+
 ## [3.0] - 2020-07-22
 ### Changed
 - Input to GSI models changed to structure (identical input format)

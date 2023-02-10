@@ -23,8 +23,9 @@ function [cp, ctau, cd, cl] = coeff_CLL(param_eq, delta)
 % April 2020
 %
 %--- Copyright notice ---%
-% Copyright (C) 2021 The University of Manchester
-% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
+% Copyright (C) 2023 The University of Manchester
+% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru,
+% Sabrina Livadiotti, Alejandro Macario Rojas
 %
 % This file is part of the ADBSat toolkit.
 %
@@ -140,71 +141,56 @@ function [beta, gamma, delta, zeta] = Fitted_Parameters(i, alphaN)
 % Drag Coefficient Model Using the Cercignani–Lampis–Lord Gas–Surface
 % Interaction Model, J. Spacecr. Rockets. 51 (2014) 1544–1563.
 % doi:10.2514/1.A32677
-beta = zeros(1,length(alphaN));
-gamma = zeros(1,length(alphaN));
-delta = zeros(1,length(alphaN));
-zeta = zeros(1,length(alphaN));
+%
+% Original: Sabrina Livadiotti
+% Modified: 7/09/2022 A.Macario-Rojas, Multimaterial handling
+% beta, gamma, delta zeta, from constants to vectors to handle
+% multimaterial alphaN
+
+% Initalize arrays
+temp = ones(1,length(alphaN));
+beta = temp; 
+gamma = temp;
+delta = temp;
+zeta = temp;
 
 if i == 1 % molecular species: He
-    beta(alphaN >= 0.95 & alphaN <= 1) = 6.2;
-    gamma(alphaN >= 0.95 & alphaN <= 1) = 0.38;
-    delta(alphaN >= 0.95 & alphaN <= 1) = 3.3;
-    zeta(alphaN >= 0.95 & alphaN <= 1) = 0.74;
-    %
-    beta(alphaN >= 0.90 & alphaN <= 0.95) = 3.8;
-    gamma(alphaN >= 0.90 & alphaN <= 0.95) = 0.52;
-    delta(alphaN >= 0.90 & alphaN <= 0.95) = 3.4;
-    zeta(alphaN >= 0.90 & alphaN <= 0.95) = 1.12;
-    %
-    beta(alphaN >= 0.50  & alphaN <= 0.90) = 3.45;
-    gamma(alphaN >= 0.50  & alphaN <= 0.90) = 0.52;
-    delta(alphaN >= 0.50  & alphaN <= 0.90) = 2.4;
-    zeta(alphaN >= 0.50  & alphaN <= 0.90) = 0.93;
-    %
-    beta(alphaN >= 0  & alphaN <= 0.50) = 0.08;
-    gamma(alphaN >= 0  & alphaN <= 0.50) = 0.52;
-    delta(alphaN >= 0  & alphaN <= 0.50) = 4.2;
-    zeta(alphaN >= 0  & alphaN <= 0.50) = 1.1;
+    iacc = and(alphaN > 0.95,alphaN <= 1);
+    beta(iacc) = 6.2; gamma(iacc) = 0.38; delta(iacc) = 3.3; zeta(iacc) = 0.74;
+
+    iacc = and((alphaN > 0.90),(alphaN <= 0.95));
+    beta(iacc) = 3.8; gamma(iacc) = 0.52; delta(iacc) = 3.4; zeta(iacc) = 1.12;
+
+    iacc = and((alphaN > 0.50),(alphaN <= 0.90));
+    beta(iacc) = 3.45; gamma(iacc) = 0.52; delta(iacc) = 2.4; zeta(iacc) = 0.93;
+
+    iacc = and((alphaN > 0),(alphaN <= 0.50));
+    beta(iacc) = 0.08; gamma(iacc) = 0.52; delta(iacc) = 4.2; zeta(iacc) = 1.1;
+
 elseif i == 2 % molecular species: O
-    beta = 5.85;
-    gamma = 0.2;
-    delta = 0.48;
-    zeta = 31;
+    beta = 5.85.*beta; gamma = 0.2.*gamma; delta = 0.48.*delta; zeta = 31.*zeta;
+
 elseif i == 3 % molecular species: N2
-    beta = 6.6;
-    gamma = 0.22;
-    delta = 0.48;
-    zeta = 35;
+    beta = 6.6.*beta; gamma = 0.22.*gamma; delta = 0.48.*delta; zeta = 35.*zeta;
+
 elseif i == 4 % molecular species: O2
-    beta = 6.3;
-    gamma = 0.26;
-    delta = 0.42;
-    zeta = 20.5;
+    beta = 6.3.*beta; gamma = 0.26.*gamma; delta = 0.42.*delta; zeta = 20.5.*zeta;
+
 elseif i == 5 % molecular species: H
-    beta(alphaN >= 0.95 & alphaN <= 1) = 3.9;
-    gamma(alphaN >= 0.95 & alphaN <= 1) = 0.195;
-    delta(alphaN >= 0.95 & alphaN <= 1) = 1.4;
-    zeta(alphaN >= 0.95 & alphaN <= 1) = 0.3;
-    %
-    beta(alphaN >= 0.90 & alphaN <= 0.95) = 3.5;
-    gamma(alphaN >= 0.90 & alphaN <= 0.95) = 0.42;
-    delta(alphaN >= 0.90 & alphaN <= 0.95) = 2;
-    zeta(alphaN >= 0.90 & alphaN <= 0.95) = 0.72;
-    %
-    beta(alphaN >= 0.50  & alphaN <= 0.90) = 3.45;
-    gamma(alphaN >= 0.50  & alphaN <= 0.90) = 0.52;
-    delta(alphaN >= 0.50  & alphaN <= 0.90) = 2.4;
-    zeta(alphaN >= 0.50  & alphaN <= 0.90) = 0.93;
-    %
-    beta(alphaN >= 0  & alphaN <= 0.50) = 0.095;
-    gamma(alphaN >= 0  & alphaN <= 0.50) = 0.465;
-    delta(alphaN >= 0  & alphaN <= 0.50) = 2.9;
-    zeta(alphaN >= 0  & alphaN <= 0.50) = 0.92;
+    iacc = and(alphaN > 0.95,alphaN <= 1);
+    beta(iacc) = 3.9; gamma(iacc) = 0.195; delta(iacc) = 1.4; zeta(iacc) = 0.3;
+
+    iacc = and((alphaN > 0.90),(alphaN <= 0.95));
+    beta(iacc) = 3.5; gamma(iacc) = 0.42; delta(iacc) = 2.0; zeta(iacc) = 0.72;
+
+    iacc = and((alphaN > 0.50),(alphaN <= 0.90));
+    beta(iacc) = 3.45; gamma(iacc) = 0.52; delta(iacc) = 2.4; zeta(iacc) = 0.93;
+
+    iacc = and((alphaN > 0),(alphaN <= 0.50));
+    beta(iacc) = 0.095; gamma(iacc) = 0.465; delta(iacc) = 2.9; zeta(iacc) = 0.92;
+
 elseif i == 6 % molecular species: N
-    beta = 4.9;
-    gamma = 0.32;
-    delta = 0.42;
-    zeta = 8;
+    beta = 4.9.*beta; gamma = 0.32.*gamma; delta = 0.42.*delta; zeta = 8.*zeta;
 end
 
 end
