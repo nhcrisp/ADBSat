@@ -98,6 +98,6 @@ end
 %param_eq.Vw = sqrt(pi.*Rmean.*param_eq.Tw/2); % Average velocity of the reflected diffuse molecules
 
 % Calculate Interactions
-pathOut = calc_coeff(modPath, resPath, deg2rad(aoa_rad), deg2rad(aos_rad), param_eq, flag_shadow, flag_solar, del, verb);
+pathOut = calc_coeff(modPath, resPath, deg2rad(aoa_deg), deg2rad(aos_deg), param_eq, flag_shadow, flag_solar, del, verb);
 
 %------------- END OF CODE --------------
