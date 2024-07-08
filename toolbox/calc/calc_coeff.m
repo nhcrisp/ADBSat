@@ -156,7 +156,7 @@ for ii = 1:indexAoA
         
         % Shadow analysis
         if flag_shad
-            [shadPan] = shadowAnaly(x, y, z, barC, delta, L_gw);
+            [shadPan] = shadowAnaly(x, y, z, barC, delta, L_gw, surfN);
             
             cp(shadPan) = 0;
             ctau(shadPan) = 0;
