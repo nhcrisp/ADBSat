@@ -33,7 +33,7 @@ data.constants.R = 8.31446261815324; % Molar (Universal/Ideal) Gas constant [J K
 data.constants.kb = 1.3806503e-23; % Boltzmann constant [m^2 kg^-2 K^-1]
 data.constants.NA = 6.02214076e23; % Avogadro constant [n mol^-1]
 
-data.constants.mHe = 2; % Molecular mass of He [g mol^-1]
+data.constants.mHe = 4.002602; % Molecular mass of He [g mol^-1]
 data.constants.mO = 15.9994; % Molecular mass of O [g mol^-1]
 data.constants.mN2 = 28.0134; % Molecular mass of N2 [g mol^-1]
 data.constants.mO2 = 31.9988; % Molecular mass of O2 [g mol^-1]

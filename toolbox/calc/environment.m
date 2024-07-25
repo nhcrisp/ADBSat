@@ -55,7 +55,7 @@ else
 end
 
 % Atmospheric properties
-[T, param_eq.rho] = atmosnrlmsise00(h, lat, lon, 2002, dayOfYear, UTseconds, f107Average, f107Daily, magneticIndex, Oflag);
+[T, param_eq.rho] = atmosnrlmsise00(h, lat, lon, 2002, dayOfYear, UTseconds, (UTseconds/3600 + lon/15), f107Average, f107Daily, magneticIndex, Oflag);
 
 % Format temperature data
 param_eq.Texo = T(1);
