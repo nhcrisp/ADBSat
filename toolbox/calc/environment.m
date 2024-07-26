@@ -91,10 +91,10 @@ end
 param_eq.massConc(1,1) = param_eq.rho(1)/param_eq.rho(6) * (data.constants.mHe/data.constants.NA/1000);
 param_eq.massConc(1,2) = param_eq.rho(2)/param_eq.rho(6) * (data.constants.mO/data.constants.NA/1000);
 param_eq.massConc(1,3) = param_eq.rho(3)/param_eq.rho(6) * (data.constants.mN2/data.constants.NA/1000);
-param_eq.massConc(1,4) = param_eq.rho(4)/param_eq.rho(6) * (data.constants.mN2/data.constants.NA/1000);
-param_eq.massConc(1,5) = param_eq.rho(5)/param_eq.rho(6) * (data.constants.mN2/data.constants.NA/1000);
-param_eq.massConc(1,6) = param_eq.rho(7)/param_eq.rho(6) * (data.constants.mN2/data.constants.NA/1000);
-param_eq.massConc(1,7) = param_eq.rho(8)/param_eq.rho(6) * (data.constants.mN2/data.constants.NA/1000);
+param_eq.massConc(1,4) = param_eq.rho(4)/param_eq.rho(6) * (data.constants.mO2/data.constants.NA/1000);
+param_eq.massConc(1,5) = param_eq.rho(5)/param_eq.rho(6) * (data.constants.mAr/data.constants.NA/1000);
+param_eq.massConc(1,6) = param_eq.rho(7)/param_eq.rho(6) * (data.constants.mH/data.constants.NA/1000);
+param_eq.massConc(1,7) = param_eq.rho(8)/param_eq.rho(6) * (data.constants.mN/data.constants.NA/1000);
 
 % Calculate specific gas constant [J kg^-1 K^-1]
 param_eq.Rmean = (data.constants.R/param_eq.mmean)*1000;
