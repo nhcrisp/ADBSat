@@ -56,11 +56,11 @@ alpha = param_eq.alpha;
 s = param_eq.s;
 Tw = param_eq.Tw;
 
-Ti = 2/3*s.^2*Tinf;
+Ti = 1/2*s.^2*Tinf;
 
 cp = ((cos(delta)).^2 + 1./(2*s.^2)).*(1+erf(s.*cos(delta)))+ ...
     cos(delta)./(sqrt(pi)*s).*exp(-s.^2.*(cos(delta)).^2) + ...
-    0.5*sqrt(2/3*(1+alpha*(Tw./Ti-1))).*(sqrt(pi)*cos(delta).*(1+erf(s.*cos(delta)))+1./s.*exp(-s.^2.*(cos(delta)).^2));
+    0.5*sqrt(1/2*(1+alpha*(Tw./Ti-1))).*(sqrt(pi)*cos(delta).*(1+erf(s.*cos(delta)))+1./s.*exp(-s.^2.*(cos(delta)).^2));
     
 ctau = sin(delta).*cos(delta).*(1+erf(s.*cos(delta))) + sin(delta)./(s*sqrt(pi)).*(exp(-s.^2.*(cos(delta)).^2));
 
