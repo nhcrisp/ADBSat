@@ -47,8 +47,8 @@ Rmean = param_eq.Rmean;
 Vinf = param_eq.vinf;
 Tinf = Vinf^2/(3*Rmean);
 
-cd = 2*(1 + (2/3)*sqrt(1 + alpha.*(Tw/Tinf-1)).*cos(delta));
-cl = 4/3.*sqrt(1 + alpha.*(Tw/Tinf-1)).*sin(delta);
+cd = 2.*cos(delta).*(1 + (2/3)*sqrt(1 + alpha.*(Tw/Tinf-1)).*cos(delta));
+cl = 4/3.*sqrt(1 + alpha.*(Tw/Tinf-1)).*sin(delta).*cos(delta);
 
 ind = find(delta>=pi/2);
 cd(ind) = 0;
