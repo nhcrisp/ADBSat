@@ -57,6 +57,10 @@ MaxArea = max(areas);
 MinArea = min(areas);
 nMat = max(M);
 
+if ~all(areas)
+    warndlg('Zero area element detected. Check input mesh quality')
+end
+
 if verb
     fprintf('Import finished!\n');
     fprintf('******************************************\n');
