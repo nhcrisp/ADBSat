@@ -44,7 +44,7 @@ sigmaT = param_eq.sigmaT;
 Tw = param_eq.Tw;
 Rmean = param_eq.Rmean;
 Vw = sqrt((pi*Rmean*Tw)/2);
-V = param_eq.Vinf;
+V = param_eq.vinf;
 
 cp   = 2.*cos(delta).*( sigmaN.*(Vw/V) + (2 - sigmaN).*cos(delta));
 ctau = 2.*cos(delta).*sin(delta).*sigmaT;

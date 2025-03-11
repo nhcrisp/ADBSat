@@ -41,7 +41,7 @@ F = zeros(0,3);
 M = zeros(0,1);
 vertex_index = 1;
 face_index = 1;
-mat_id = 0;
+mat_id = 1;
 fid = fopen(fileIn,'r');
 line = fgets(fid);
 
@@ -51,7 +51,7 @@ while ischar(line)
     face_long = sscanf(line,'f %d/%d/%d %d/%d/%d %d/%d/%d');
     face_long2 = sscanf(line,'f %d/%d %d/%d %d/%d');
     face_long3 = sscanf(line,'f %d//%d %d//%d %d//%d');
-    material = sscanf(line,'usemtl %d;');
+    material = sscanf(line,'usemtl %s;');
     
     % see if line is vertex command if so add to vertices
     if(size(vertex)>0)
@@ -60,7 +60,7 @@ while ischar(line)
         
         % see if line is a material identifier
     elseif(size(material)>0)
-        mat_id = material;
+        mat_id = mat_id + 1; % increment counter
         
         % see if line is simple face command if so add to faces
     elseif(size(face)>0)

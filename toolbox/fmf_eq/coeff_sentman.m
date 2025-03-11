@@ -1,7 +1,8 @@
 function [cp, ctau, cd, cl] = coeff_sentman(param_eq, delta)
 % Calculates aerodynamic coefficients for a flat plate using Sentman's [1]
-% formula. Assumes the Schamberg's [2] modification to account for incomplete
-% accommodation and the Moe et al. [3] correction factor of sqrt(2/3).
+% formula. Assumes Schamberg's [2] modification to account for
+% incomplete accommodation and Koppenwallner's [3] correction factor of 1/2
+% rather than the Moe et al. [4] correction factor of 2/3.
 %
 % [1] Sentman LH (1961) Free molecule flow theory and its application to
 % the determination of aerodynamic forces. Sunnyvale, CA
@@ -10,7 +11,10 @@ function [cp, ctau, cd, cl] = coeff_sentman(param_eq, delta)
 % Interaction for Hyperthermal Free Molecule Flow with Applications to
 % Neutral-particle Drag Estimates of Satellites. Rand Corporation
 %
-% [3] 1. Moe K, Moe MM, Rice CJ (2004) Simultaneous Analysis of
+% [3] G. Koppenwallner, Energy Accommodation and Momentum Transfer
+% Modeling (HTG-TN-08-11), Hyperschall Technologie Göttingen, 2009.
+% 
+% [4] Moe K, Moe MM, Rice CJ (2004) Simultaneous Analysis of
 % Multi-Instrument Satellite Measurements of Atmospheric Density. J Spacecr
 % Rockets 41:849–853.https://doi.org/10.2514/1.2090
 %
@@ -58,11 +62,12 @@ Tw = param_eq.Tw;
 
 Ti = 1/2*s.^2*Tinf;
 
-cp = ((cos(delta)).^2 + 1./(2*s.^2)).*(1+erf(s.*cos(delta)))+ ...
-    cos(delta)./(sqrt(pi)*s).*exp(-s.^2.*(cos(delta)).^2) + ...
-    0.5*sqrt(1/2*(1+alpha*(Tw./Ti-1))).*(sqrt(pi)*cos(delta).*(1+erf(s.*cos(delta)))+1./s.*exp(-s.^2.*(cos(delta)).^2));
+cp = (cos(delta).^2 + 1./(2*s.^2)).*(1 + erf(s.*cos(delta))) + ...
+    cos(delta)./(sqrt(pi)*s).*exp(-s.^2.*cos(delta).^2) + ...
+    (1/2)*sqrt(1/2*(1+alpha*(2 * Tw./(Tinf.*s.^2)-1))).*(sqrt(pi)*cos(delta).*(1+erf(s.*cos(delta))) + ...
+    (1./s).*exp(-s.^2.*cos(delta).^2));
     
-ctau = sin(delta).*cos(delta).*(1+erf(s.*cos(delta))) + sin(delta)./(s*sqrt(pi)).*(exp(-s.^2.*(cos(delta)).^2));
+ctau = sin(delta).*cos(delta).*(1+erf(s.*cos(delta))) + sin(delta)./(s*sqrt(pi)).*(exp(-s.^2.*cos(delta).^2));
 
 cd   = cp.*cos(delta) + ctau.*sin(delta);
 cl   = cp.*sin(delta) - ctau.*cos(delta);

@@ -6,6 +6,8 @@ Always keep a [Unreleased] section at the top for tracking changes
 ## [Unreleased]
 ### Changed
 - File input and output structure changed to use user defined directories
+- Update obj_fileTri2patch.m for matid in generalised .obj files
+- Correction in coeff_sentman.m to use Koppenwallner's correction factor rather than Moe's.
 ### Added
 - Diffuse Reemission, Incomplete Accommodation (DRIA) GSI model
 - Functionality to allow shadowed panels to be plotted onto model surface
