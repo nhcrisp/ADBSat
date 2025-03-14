@@ -6,13 +6,14 @@ Always keep a [Unreleased] section at the top for tracking changes
 ## [Unreleased]
 ### Changed
 - File input and output structure changed to use user defined directories
-- Update obj_fileTri2patch.m for matid in generalised .obj files
-- Correction in coeff_sentman.m to use Koppenwallner's correction factor rather than Moe's.
+- Update obj_fileTri2patch.m to support generalised matid in .obj files
+- Correction in coeff_sentman.m to use Koppenwallner's correction factor rather than Moe's
+- Changed determination of whether a triangle is in front of another within shadowing function
 ### Added
 - Diffuse Reemission, Incomplete Accommodation (DRIA) GSI model
 - Functionality to allow shadowed panels to be plotted onto model surface
 ### Removed
-- meshlabserver command line STL to OBJ functionality depreciated in recent updates 
+- Command line STL to OBJ functionality using meshlabserver depreciated in recent updates
 ### Fixed
 - Units of AoA and AoS in example scripts
 
@@ -45,4 +46,4 @@ Always keep a [Unreleased] section at the top for tracking changes
 - Absolute path references are now dyanmically allocated based on /install/ADBsat_dynpath function
 
 ## [1.2] - 2013-03-14
-- David Mostaza Prieto final version.
+- David Mostaza Prieto final version
