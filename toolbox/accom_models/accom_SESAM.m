@@ -1,4 +1,4 @@
-function alpha = accom_SESAM(inparam,m_s,K_s)
+function [alpha] = accom_SESAM(inparam)
 % Calculates the accommodation coefficient using the Semi-Empirical Satellite Accommodation Model (SESAM)
 % [M. D. Pilinski, B. M. Argrow, S. E. Palo, and B. R. Bowman, “Semi-empirical ...
 % satellite ac-commodation model for spherical and randomly tumbling objects,”...
@@ -10,8 +10,8 @@ function alpha = accom_SESAM(inparam,m_s,K_s)
 %       
 %       inparam.s       : Thermal speed ratio [-]
 %       inparam.vinf    : Free flow bulk velocity [m s^-1]
-%       m_s             : Surface molecule mass [amu]
-%       K_s             : Substrate coefficient, takes a value between 2.4 and 3.6. 
+%       inparam.m_s     : Surface molecule mass [amu]
+%       inparam.K_s     : Substrate coefficient, takes a value between 2.4 and 3.6. 
 %       inparam.rho     : an array of M-by-9 values of densities.  These values are
 %                         HE number density in meters^-3, O number density in meters^-3,
 %                         N2 number density in meters^-3, O2 number density in meters^-3,
@@ -49,21 +49,21 @@ function alpha = accom_SESAM(inparam,m_s,K_s)
 %------------- BEGIN CODE -------------
 
 % Assign value for K_s if not provided by the user
-if nargin <3 || isempty(K_s)
-    K_s = 2.4;
+if ~isfield(inparam,'K_s')
+    inparam.K_s = 2.4;
     warning('Substrate coefficient (K_s) not provided, default value of 2.4 is used')
 end
 
 % Check if K_s is within limits
-if K_s<2.4 || K_s>3.6
-     K_s = 2.4;
-     warning('Substrate coefficient (K_s) value outside the limits [2.4,3.6]. Default value of 2.4 is used')
+if inparam.K_s<2.4 || inparam.K_s>3.6
+    inparam.K_s = 2.4;
+    warning('Substrate coefficient (K_s) value outside the limits [2.4,3.6]. Default value of 2.4 is used')
 end
 
 % Assign value for m_s if not provided by the user
-if nargin <2 || isempty(m_s)
-    m_s = 65;
-     warning('Surface molecule mass (m_s) not provided, default value of 65 amu is used')
+if ~isfield(inparam,'m_s')
+    inparam.m_s = 65;
+    warning('Surface atomic mass (m_s) not provided, default value of 65 amu is used')
 end
 
 %-------------------    Constants   --------------
@@ -97,8 +97,8 @@ m_bar = ((inparam.rho(1)*data.constants.mHe+inparam.rho(2)*data.constants.mO+inp
         inparam.rho(5)*data.constants.mAr+inparam.rho(7)*data.constants.mH+inparam.rho(8)*data.constants.mN+inparam.rho(9)*data.constants.mAnO)*1e-03/(data.constants.NA))/ ...
         (inparam.rho(1)+inparam.rho(2)+inparam.rho(3)+inparam.rho(4)+inparam.rho(5)+inparam.rho(7)+inparam.rho(8)+inparam.rho(9)); 
 
-mu = m_bar/(m_s*1.6605e-027);
-alpha_s = K_s*mu/(1+mu)^2;
+mu = m_bar/(inparam.m_s*1.6605e-027);
+alpha_s = inparam.K_s*mu/(1+mu)^2;
 theta_ = K_L*P_O/(1+K_L*P_O);
 
 alpha = (1-theta_)*alpha_s+theta_;

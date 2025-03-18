@@ -1,4 +1,4 @@
-function [cp, ctau, cd, cl] = mainCoeff(param_eq, delta, matID)
+function [cp, ctau, cd, cl, param_eq] = mainCoeff(param_eq, delta, matID)
 % Passes the input parameters to the correct GSI model
 %
 % Inputs:
@@ -38,6 +38,20 @@ function [cp, ctau, cd, cl] = mainCoeff(param_eq, delta, matID)
 %
 %------------- BEGIN CODE --------------
 
+% Check/calculate accommodation coefficient
+if isfield(param_eq,'accom_model')
+    accommodel = str2func(['accom_',param_eq.accom_model]);
+    try 
+        param_eq.alpha = accommodel(param_eq);
+    catch
+        if isnumeric(param_eq.alpha)
+            warning('Variable accommodation model expected, but using constant accommodation coefficient...')
+        else
+            error('Accommodation model and/or coefficient incorrectly defined.')
+        end
+    end
+end
+
 % Check material references
 nMat = max(matID); % Number of materials defined in .obj
 if nMat == 0
@@ -45,8 +59,6 @@ if nMat == 0
     matID(matID == 0) = 1;
     nMat = 1;
 end
-
-%    warning('Material ID not correctly defined in .obj file for multiple surface types')
     
 % Apply correct material properties per mesh face
 if isfield(param_eq,'alpha')
@@ -83,6 +95,10 @@ end
 
 % Calculate GSIM
 gsimodel = str2func(['coeff_',param_eq.gsi_model]);
-[cp, ctau, cd, cl] = gsimodel(param_eq, delta);
+try
+    [cp, ctau, cd, cl] = gsimodel(param_eq, delta);
+catch ME
+    error('GSI incorrectly defined')
+end
 
 %------------- END OF CODE --------------

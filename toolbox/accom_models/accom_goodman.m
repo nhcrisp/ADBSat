@@ -1,16 +1,16 @@
-function [alpha] = accom_goodman(inparam,m_s,K_s)
+function [alpha] = accom_goodman(inparam)
 % Calculates the accommodation coefficient using the Goodman model
-% 
+%
 % Takes atmospheric parameters from 'environment' function in ADBSat as an
 % input and reports accommodation coefficient using the Goodman formula
 % Inputs:
-%       
-%       m_s             : Surface molecule mass [amu]
-%       K_s             : Substrate coefficient, takes a value between 2.4 and 3.6. 
+%
+%       inparam.m_s     : Surface molecule mass [amu]
+%       inparam.K_s     : Substrate coefficient, takes a value between 2.4 and 3.6.
 %       inparam.rho     : an array of M-by-9 values of densities.  These values are
 %                         HE number density in meters^-3, O number density in meters^-3,
 %                         N2 number density in meters^-3, O2 number density in meters^-3,
-%                         AR number density in meters^-3, total mass density in kilogram 
+%                         AR number density in meters^-3, total mass density in kilogram
 %                         per meters cubed, H number density in meters^-3, N number
 %                         density in meters^-3, and Anomalous oxygen number density in
 %                         meters^-3.
@@ -44,30 +44,31 @@ function [alpha] = accom_goodman(inparam,m_s,K_s)
 %------------- BEGIN CODE -------------
 
 % Assign value for K_s if not provided by the user
-if nargin <3 || isempty(K_s)
-    K_s = 2.4;
+if ~isfield(inparam,'K_s')
+    inparam.K_s = 2.4;
     warning('Substrate coefficient (K_s) not provided, default value of 2.4 is used')
 end
+
 % Check if K_s is within limits
-if K_s<2.4 || K_s>3.6
-     K_s = 2.4;
-     warning('Substrate coefficient (K_s) value outside the limits [2.4,3.6]. Default value of 2.4 is used')
+if inparam.K_s<2.4 || inparam.K_s>3.6
+    inparam.K_s = 2.4;
+    warning('Substrate coefficient (K_s) value outside the limits [2.4,3.6]. Default value of 2.4 is used')
 end
 
 % Assign value for m_s if not provided by the user
-if nargin <2 || isempty(m_s)
-    m_s = 65;
-     warning('Surface atomic mass (m_s) not provided, default value of 65 amu is used')
+if ~isfield(inparam,'m_s')
+    inparam.m_s = 65;
+    warning('Surface atomic mass (m_s) not provided, default value of 65 amu is used')
 end
 
 data=ADBSatConstants;
 
 m_bar = ((inparam.rho(1)*data.constants.mHe+inparam.rho(2)*data.constants.mO+inparam.rho(3)*data.constants.mN2+inparam.rho(4)*data.constants.mO2+ ...
-        inparam.rho(5)*data.constants.mAr+inparam.rho(7)*data.constants.mH+inparam.rho(8)*data.constants.mN+inparam.rho(9)*data.constants.mAnO)*1e-03/(data.constants.NA))/ ...
-        (inparam.rho(1)+inparam.rho(2)+inparam.rho(3)+inparam.rho(4)+inparam.rho(5)+inparam.rho(7)+inparam.rho(8)+inparam.rho(9)); % Calculate average atmospheric mass
+    inparam.rho(5)*data.constants.mAr+inparam.rho(7)*data.constants.mH+inparam.rho(8)*data.constants.mN+inparam.rho(9)*data.constants.mAnO)*1e-03/(data.constants.NA))/ ...
+    (inparam.rho(1)+inparam.rho(2)+inparam.rho(3)+inparam.rho(4)+inparam.rho(5)+inparam.rho(7)+inparam.rho(8)+inparam.rho(9)); % Calculate average atmospheric mass
 
-mu = m_bar/(m_s*1.6605e-027);
+mu = m_bar/(inparam.m_s*1.6605e-027);
 
-alpha = K_s*mu/(1+mu)^2;
+alpha = inparam.K_s * mu/(1+mu)^2;
 
 end

@@ -70,8 +70,8 @@ elseif any(strcmpi(param_eq.gsi_model,{'schaaf','storchHyp'}))
         error([param_eq.gsi_model,' model requires sigmaN and sigmaT inputs'])
     end
 elseif any(strcmpi(param_eq.gsi_model,{'cook','sentman','maxwell','DRIA'}))
-    if ~isfield(param_eq,'alpha')
-        error([param_eq.gsi_model,' model requires alpha input'])
+    if ~isfield(param_eq,'accom_model') && ~isfield(param_eq,'alpha')
+        error([param_eq.gsi_model,' model requires alpha input or accommodation coefficient model'])
     end
 elseif strcmpi(param_eq.gsi_model,'newton')
     % Nothing

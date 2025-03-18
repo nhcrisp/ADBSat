@@ -141,7 +141,7 @@ for ii = 1:indexAoA
         param_eq.ell = dot(-uL,surfN);
         
         % Local flat plate coefficients
-        [cp, ctau, cd, cl] = mainCoeff(param_eq, delta, matID);
+        [cp, ctau, cd, cl, param_eq] = mainCoeff(param_eq, delta, matID);
         
         if flag_sol
             [cn, cs] = coeff_solar(delta, param_eq);
