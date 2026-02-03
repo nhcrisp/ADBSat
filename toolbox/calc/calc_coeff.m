@@ -14,7 +14,7 @@
 %       aoaS     : Angle(s) of attack [rad]
 %       aosS     : Angle(s) of sideslip [rad]
 %       eqmodel  : String containing the name of the equation to be used to calculate coefficients
-%       param_eq : Parameters associated to "eqmodel"
+%       inparam : Parameters associated to "eqmodel"
 %       flag_shad: Flag to perform shadow analysis (1=perform, 0=no)
 %       flag_sol : Flag to calculate solar wind coefficients
 %       pathin   : Path for loop runs (only for loop sims)
@@ -63,7 +63,7 @@
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------- BEGIN CODE --------------
 
-function [fileOut] = calc_coeff(fiName, respath, aoaS, aosS, param_eq, flag_shad, flag_sol, del, verb)
+function [fileOut] = calc_coeff(fiName, respath, aoaS, aosS, inparam, flag_shad, flag_sol, del, verb)
 
 [~,matName,~] = fileparts(fiName);
 
@@ -137,14 +137,14 @@ for ii = 1:indexAoA
         col = find(all(isnan(uL),1));
         uL(:,col) = -surfN(:,col);
         % Negative dot product of unit drag and lift vectors with surface normal vector (March 2019)
-        param_eq.gamma = dot(-uD,surfN);
-        param_eq.ell = dot(-uL,surfN);
+        inparam.gamma = dot(-uD,surfN);
+        inparam.ell = dot(-uL,surfN);
         
         % Local flat plate coefficients
-        [cp, ctau, cd, cl, param_eq] = mainCoeff(param_eq, delta, matID);
+        [cp, ctau, cd, cl, param_eq] = mainCoeff(inparam, delta, matID);
         
         if flag_sol
-            [cn, cs] = coeff_solar(delta, param_eq);
+            [cn, cs] = coeff_solar(delta, inparam);
         end
         
         % Backwards facing panels
