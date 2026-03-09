@@ -25,7 +25,7 @@ clear
 
 % Load the two gas-surface interaction model functions
 GSI_model1 = @coeff_sentman;
-GSI_model2 = @coeff_CLL;
+GSI_model2 = @coeff_schaaf;
 
 % Setting up the solver parameters manually
 param_eq = struct;
@@ -48,21 +48,20 @@ delta = deg2rad(0:1:90);
 % Calculate the environmental variables
 param_eq = environment(param_eq, h, lat, lon, dayOfYear, UTseconds, f107Average, f107Daily, magneticIndex, AnO);
 
-% Set up of the Sentman model
+% Set up of the Sentman GSI
 param_eq.alpha = 1; % Accommodation Coefficient [-] 
 param_eq.Tw = 300; % Wall temperature [K]
 % Calculate the coefficients using Sentman GSI
 [cp1, ctau1, cd1, cl1] = GSI_model1(param_eq, delta);
 
-% Set up CLL model
-param_eq.alphaN = 1; % Normal Accom Coefficient [-] 
+% Set up Schaaf and Chambre model
+param_eq.sigmaN = 1; % Normal Accom Coefficient [-] 
 param_eq.sigmaT = 1; % Tangential Accom Coefficient [-] 
-% Calculate the coefficients using CLL GSI
+% Calculate the coefficients using Schaaf and Chambre GSI
 [cp2, ctau2, cd2, cl2] = GSI_model2(param_eq, delta);
 
 %% Post Processing 
 % Plotting the Cd and Cl distribution
-figure
 hold on
 p_1 = plot(delta*(180/pi),cd1);
 set(p_1, 'Color', 'k', 'LineStyle','--', 'LineWidth',1.25)
@@ -81,6 +80,6 @@ set(p_4, 'Color', [0.5 0.5 0.5], 'LineStyle','-','LineWidth',1.25)
 ylabel('Lift Coefficient, C_L')
 
 xlabel('Incidence Angle [deg]')
-legend('C_D Sentman (\alpha = 1)', 'C_D CLL (\alpha_N = \sigma_T = 1)', 'C_L Sentman (\alpha = 1)', 'C_L CLL (\alpha_N = \sigma_T = 1)')
+legend('C_D Sentman (\alpha = 1)', 'C_D Schaaf and Chambre (\sigma_N = \sigma_T = 1)', 'C_L Sentman (\alpha = 1)', 'C_L Schaaf and Chambre (\sigma_N = \sigma_T = 1)')
 
 set(gcf,'color','w');
