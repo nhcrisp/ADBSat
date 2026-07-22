@@ -58,9 +58,6 @@ if install % Install toolbox
     disp(['ADBSat_path = ', ADBSat_path])
     
     % Create folders for examples
-    if not(isfolder([ADBSat_path,filesep,'inou',filesep,'stl_files']))
-        mkdir([ADBSat_path,filesep,'inou',filesep,'stl_files'])
-    end
     if not(isfolder([ADBSat_path,filesep,'inou',filesep,'models']))
         mkdir([ADBSat_path,filesep,'inou',filesep,'models'])
     end
