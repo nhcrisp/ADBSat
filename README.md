@@ -3,7 +3,7 @@
 ADBSat is a MATLAB toolkit for computing aerodynamic coefficient databases for satellite geometries in free-molecular flow (FMF) conditions.
 
 The main features of ADBSat are:
-- Import of body geometry from .stl or .obj mesh files
+- Import of body geometry from .stp, .stl or .obj mesh files
 - Aerodynamic force and moment coefficient calculation for different gas-surface interaction models
 - Solar radiation pressure force and moment coefficient calculation
 - Consideration of multiple surface/material characteristics
@@ -25,6 +25,7 @@ ADBSat may therefore lose accuracy when:
 ## Dependencies
 - MATLAB 
 - Aerospace Toolbox (for computation of environmental parameters if not supplied by the user)
+- PDE Toolbox (if you are intending to use .stp files with ADBSat
 - ~~meshlabserver (if automated conversion from .stl to .obj files is required)~~ **FUNCTIONALITY DEPRECIATED IN LATEST MESHLAB**
 
 ## Usage
