@@ -25,7 +25,7 @@ ADBSat may therefore lose accuracy when:
 ## Dependencies
 - MATLAB 
 - Aerospace Toolbox (for computation of environmental parameters if not supplied by the user)
-- PDE Toolbox (if you are intending to use .stp files with ADBSat
+- PDE Toolbox (if you are intending to use .stp files with ADBSat)
 - ~~meshlabserver (if automated conversion from .stl to .obj files is required)~~ **FUNCTIONALITY DEPRECIATED IN LATEST MESHLAB**
 
 ## Usage
