@@ -17,6 +17,20 @@ Always keep a [Unreleased] section at the top for tracking changes
 ### Fixed
 - Units of AoA and AoS in example scripts
 
+## [4.0] - 2026-07-22
+### Changed
+ - Example scripts have been rewritten to retain compatilibity
+ - Inputs files consolidated into a single folder
+### Added
+ - .stp file compatibility with ADBSat (requires PDE Toolbox)
+ - Mesh validation and quality checks, as well as mesh subdivision processes
+ - A second shadowing algorithm, which can account for hypothermal flow at the cost of simulation speed
+ - GUIs for both single AoA/AoS analysis and full database generation
+ - GUI parameter selction can be saved and loaded via a .JSON file
+### Removed
+### Fixed
+ - updated obj_fileTri2Patch.m to simplify file parsing
+
 ## [3.0] - 2020-07-22
 ### Changed
 - Input to GSI models changed to structure (identical input format)
