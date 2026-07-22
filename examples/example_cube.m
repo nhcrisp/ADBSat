@@ -18,6 +18,27 @@
 %
 % You should have received a copy of the GNU General Public License along
 % with this program. If not, see <http://www.gnu.org/licenses/>.
+%% ========================================================================
+% CHANGELOG
+% List of functions that have been updated:
+% example_plate.m - now allows for easy selection of input file type and increased mesh processing control
+% ADBSatImport.m - is able to handle all file types seamlessly
+% importobjtri.m - validates, subdivides and "grades" mesh
+% obj_fileTri2Patch.m - streamlined .obj file scanning to speed up process
+%
+% calc_coeff.m - now can account for hyper and hypo thermal flow conditions
+% 
+% List of functions that have been introduced:
+% plotMeshQuality.m - shows .obj mesh quality plots: a complete heatmap and with problematic elements isolated
+% stpToMesh.m - requires PDE Toolbox - converts .stp AP242 files into a mesh compatible with ADBSat
+% plotMesh.m - shows the original and subdivided mesh for .obj files
+% validateMesh.m - ensures that the obj mesh is watertight, orientable etc
+%
+% shadowAnalyHypo.m - performs path tracing to determine if panels are shadowed in hypothermal conditions
+% 
+% Other changes:
+% Merged all input file locations into one folder
+%% ========================================================================
 %------------ BEGIN CODE ----------%
 clear
 

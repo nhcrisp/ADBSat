@@ -27,12 +27,16 @@
 
 clear
 
-modName = 'cube';
+modName = 'sphere';
+fileType = 'obj';
 % Path to model file
 ADBSat_path = ADBSat_dynpath;
-modIn = fullfile(ADBSat_path,'inou','obj_files',[modName,'.obj']);
+% Change this line to suit the file location and type according to your
+% needs. .stl does not contain material or appearance data, .obj contains 
+% material data and .stp contains appearance data
+modIn = fullfile(ADBSat_path,'inou','input_files',[modName,'.',fileType]);
 modOut = fullfile(ADBSat_path,'inou','models');
-resOut = fullfile(ADBSat_path,'inou','results');
+resOut = fullfile(ADBSat_path,'inou','results',modName);
 
 %Input conditions
 alt = 200; %km

@@ -1,8 +1,9 @@
-% Sphere Example
+% Cube Example
 %
 %--- Copyright notice ---%
 % Copyright (C) 2021 The University of Manchester
-% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru and Sabrina Livadiotti
+% Written by David Mostaza Prieto,  Nicholas H. Crisp, Luciana Sinpetru, 
+% Sabrina Livadiotti and Joe Tucker
 %
 % This file is part of the ADBSat toolkit.
 %
@@ -21,12 +22,13 @@
 %% ========================================================================
 % CHANGELOG
 % List of functions that have been updated:
-% example_plate.m - now allows for easy selection of input file type and increased mesh processing control
-% ADBSatImport.m - is able to handle all file types seamlessly
+% example_scripts.m - now allows for easy selection of input file type and increased mesh processing control
+% exmaple_plate.m - renamed to example_shadow.m, reflecting its use case
+% ADBSatImport.m - is able to handle stl, obj and stp file types seamlessly
 % importobjtri.m - validates, subdivides and "grades" mesh
 % obj_fileTri2Patch.m - streamlined .obj file scanning to speed up process
 %
-% calc_coeff.m - now can account for hyper and hypo thermal flow conditions
+% calc_coeff.m - can now account for hyper- and hypo- thermal flow conditions
 % 
 % List of functions that have been introduced:
 % plotMeshQuality.m - shows .obj mesh quality plots: a complete heatmap and with problematic elements isolated
@@ -35,15 +37,21 @@
 % validateMesh.m - ensures that the obj mesh is watertight, orientable etc
 %
 % shadowAnalyHypo.m - performs path tracing to determine if panels are shadowed in hypothermal conditions
-% 
+%
+% app.m - This is a GUI designed to enable easy use of ADBSat for single case analysis
+% appDB.m - This is a GUI designed to enable easy generation of a full database of different flight angles
+% MULTIPLEFUNCTIONS.m - Blanket copy of many functions that have been rewritten to seamlessly output to the GUI
+%
 % Other changes:
 % Merged all input file locations into one folder
+% Introduced a new GUI folder containing the GUIs, functions that they rely on and a gui_presets folder for .json files to allow for easy rerunning of simulations
 %% ========================================================================
 %------------ BEGIN CODE ----------%
 clear
 
-modName = 'sphere';
-fileType = 'obj';
+profile on
+modName = 'shadowTest';
+fileType = 'stp';
 % Path to model file
 ADBSat_path = ADBSat_dynpath;
 % Change this line to suit the file location and type according to your
@@ -107,7 +115,8 @@ if verb && ~del
     patches = findobj(ax, 'Type', 'Patch');
     for k = 1:numel(patches)
         set(patches(k), 'EdgeColor', 'none');
-    end 
+    end
+profile viewer    
 end
 
 %------------ END CODE -----------%
