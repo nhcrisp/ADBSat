@@ -19,39 +19,57 @@
 % You should have received a copy of the GNU General Public License along
 % with this program. If not, see <http://www.gnu.org/licenses/>.
 %------------ BEGIN CODE ----------%
-
 clear
 
 modName = 'cube';
+fileType = 'obj';
 % Path to model file
 ADBSat_path = ADBSat_dynpath;
-modIn = fullfile(ADBSat_path,'inou','obj_files',[modName,'.obj']);
+% Change this line to suit the file location and type according to your
+% needs. .stl does not contain material or appearance data, .obj contains 
+% material data and .stp contains appearance data
+modIn = fullfile(ADBSat_path,'inou','input_files',[modName,'.',fileType]);
 modOut = fullfile(ADBSat_path,'inou','models');
 resOut = fullfile(ADBSat_path,'inou','results',modName);
 
-%Input conditions
+% Input conditions
 alt = 200; %km
 inc = 51.6; %deg
 env = [alt*1e3, inc/2, 0, 106, 0, 65, 65, ones(1,7)*3, 0]; % Environment variables
 
-aoa_deg = 0; % Angle of attack [deg]
-aos_deg = 0; % Angle of sideslip [deg]
+aoa_deg = 0; % Angle of attack
+aos_deg = 0; % Angle of sideslip
 
 % Model parameters
 shadow = 1;
-inparam.gsi_model = 'cook';
-inparam.alpha = 1; % Accommodation (altitude dependent)
+inparam.gsi_model = 'sentman';
+
+% Turning this off requires either the Sentman or Schaaf and Chambre GSIM.
+% It will also DRASTICALLY increase computation time. You have been warned
+inparam.hyperthermal = 0;
+inparam.rays = 40;
+
+% inparam.alpha represents the accomodation coefficients for each material.
+% Ensure that it is ordered correctly using the debug plots provided
+inparam.alpha = [1 1 1]; % Accommodation (altitude dependent)
 inparam.Tw = 300; % Wall Temperature [K]
 
 solar = 1;
 inparam.sol_cR = 0.15; % Specular Reflectivity
 inparam.sol_cD = 0.25; % Diffuse Reflectivity
 
+% Mesh Parameters
+meshParam.subdivisions = 0; % for .obj and .stl only
+meshParam.elementSize = 0.002; % for .stp only
+meshParam.translation = [0 0 0]; % X, Y, Z
+meshParam.rotationAngles = [90 0 0]; % Pitch, Roll, Yaw
+meshParam.centering = 1; % automatically centres the model around (0,0,0)
+
 verb = 1;
 del = 0;
 
 % Import model
-[modOut] = ADBSatImport(modIn, modOut, verb);
+[modOut] = ADBSatImport(modIn, modOut, verb, meshParam);
 
 % Environment Calculations
 inparam = environment(inparam, env(1),env(2),env(3),env(4),env(5),env(6),env(7),env(8:14),env(15));
@@ -61,6 +79,14 @@ fileOut = calc_coeff(modOut, resOut, deg2rad(aoa_deg), deg2rad(aos_deg), inparam
 
 % Plot surface distribution
 if verb && ~del
-    plot_surfq(fileOut, modOut, aoa_deg(1), aos_deg(1), 'cp');
+    plot_surfq(fileOut, modOut, aoa_deg(1), aos_deg(1), 'cd');
+
+    % Remove edges on plotted patches
+    ax = gca;
+    patches = findobj(ax, 'Type', 'Patch');
+    for k = 1:numel(patches)
+        set(patches(k), 'EdgeColor', 'none');
+    end  
 end
+
 %------------ END CODE -----------%
